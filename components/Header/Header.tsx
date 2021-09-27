@@ -24,11 +24,11 @@ import {
 import { HiMenu, HiOutlineSearch } from 'react-icons/hi'
 import { Logo } from '../Logo'
 import NextLink from 'next/link'
-import { useMoralis } from 'react-moralis'
 import { DropdownMenu } from './DropdownMenu'
+import { useWeb3React } from '@web3-react/core'
 
 export const Header: React.FC = ({}) => {
-  const { isAuthenticated } = useMoralis()
+  const { active } = useWeb3React()
 
   return (
     <Box bgColor="brand.500" color="white" as="header">
@@ -53,7 +53,7 @@ export const Header: React.FC = ({}) => {
                 Sell Templates
               </Button>
             </NextLink>
-            {!isAuthenticated && (
+            {!active && (
               <NextLink href="/connect">
                 <Button variant="outline" rounded="full">
                   Connect wallet
@@ -64,7 +64,7 @@ export const Header: React.FC = ({}) => {
           <Box display={['flex', 'none']} mr="1rem">
             <MobileMenu />
           </Box>
-          {isAuthenticated && <DropdownMenu />}
+          {active && <DropdownMenu />}
         </Flex>
       </Container>
       <Container
@@ -126,7 +126,7 @@ const MobileMenu: React.FC = ({}) => {
         <DrawerContent bgColor="brand.500">
           <DrawerCloseButton />
           <DrawerHeader>
-            <Logo w="6rem" h="auto" />
+            <Logo width="6rem" height="auto" />
           </DrawerHeader>
 
           <DrawerBody>

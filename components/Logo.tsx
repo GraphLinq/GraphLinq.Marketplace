@@ -1,6 +1,7 @@
 import Icon from '@chakra-ui/icon'
+import { IconProps } from '@chakra-ui/react'
 
-export const Logo = (props: JSX.Element) => {
+export const Logo = (props: IconProps) => {
   return (
     <Icon viewBox="0 0 202.4 36.9" {...props}>
       <linearGradient

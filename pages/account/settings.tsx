@@ -12,18 +12,13 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import { useMoralis } from 'react-moralis'
-import Moralis from 'moralis'
-import React, { createRef, useState, useEffect } from 'react'
+import React, { createRef, useState } from 'react'
 import { UserAvatar } from '@/components/UserAvatar'
 import { HiUpload } from 'react-icons/hi'
 
 const Settings: NextPage = () => {
-  const { setUserData, isUserUpdating, user } = useMoralis()
-
-  //const { error, isUploading, moralisFile, saveFile } = useMoralisFile()
   const [nickName, setNickname] = useState('')
-  const [userAvatar, setUserAvatar] = useState<string>()
+  const userAvatar = ''
   const [fileUpload, setFileUpload] = useState({
     loaded: false,
     file: {},
@@ -36,17 +31,9 @@ const Settings: NextPage = () => {
 
   async function updateProfile() {
     try {
-      if (nickName != '')
-        await setUserData({ nickname: nickName }).then(() =>
-          console.log('nickname set')
-        )
+      if (nickName != '') console.log('nickname set')
       if (fileUpload.preview != '') {
-        const avatar = new Moralis.File(fileUpload.file.name, fileUpload.file, {
-          type: fileUpload.file.type,
-        })
-        await setUserData({ avatar: avatar }).then(() =>
-          console.log('avatar set')
-        )
+        console.log('avatar set')
       }
     } catch (error) {
       console.log('error: ', error)
@@ -54,31 +41,19 @@ const Settings: NextPage = () => {
   }
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    //console.log(e.target.files[0])
-    //console.log(e.target.files[0].stream())
-    setFileUpload({
-      loaded: true,
-      file: e.target.files[0],
-      preview: URL.createObjectURL(e.target.files[0]),
-    })
+    if (e.target.files) {
+      setFileUpload({
+        loaded: true,
+        file: e.target.files[0],
+        preview: URL.createObjectURL(e.target.files[0]),
+      })
+    }
   }
 
   function onInputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     const element = event.target as HTMLInputElement
     element.value = ''
   }
-
-  useEffect(() => {
-    async function setAvatar() {
-      const avatar = await user?.get('avatar')
-      console.log(avatar)
-      if (avatar) {
-        setUserAvatar(avatar._url)
-      }
-    }
-    setAvatar()
-    console.log(userAvatar)
-  }, [userAvatar, user])
 
   return (
     <Container
@@ -131,11 +106,7 @@ const Settings: NextPage = () => {
             onChange={handleNicknameChange}
           />
         </FormControl>
-        <Button
-          size="lg"
-          onClick={() => updateProfile()}
-          disabled={isUserUpdating}
-        >
+        <Button size="lg" onClick={() => updateProfile()}>
           Update profile
         </Button>
       </Stack>

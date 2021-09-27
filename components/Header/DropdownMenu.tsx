@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   Menu,
   MenuButton,
@@ -26,66 +26,16 @@ import {
   HiOutlineClipboardCopy,
 } from 'react-icons/hi'
 import NextLink from 'next/link'
-import { useMoralis } from 'react-moralis'
+import { useWeb3React } from '@web3-react/core'
 
-export const DropdownMenu: React.FC = ({}) => {
-  const { user, logout, Moralis } = useMoralis()
-  const [nickName, setnickName] = useState('')
-  const [userAvatar, setUserAvatar] = useState<string>()
-  const [address, setAddress] = useState('')
-  const [balance, setBalance] = useState(0)
-  const [usdValue, setUsdValue] = useState(0)
-  const { hasCopied, onCopy } = useClipboard(address)
+export const DropdownMenu: React.FC = () => {
+  const { account } = useWeb3React()
 
-  function formatCur(num: number, min: number, max: number) {
-    const formatConfig = {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: min,
-      maximumFractionDigits: max,
-      currencyDisplay: 'symbol',
-    }
-    const curFormatter = new Intl.NumberFormat('en-US', formatConfig)
-
-    return curFormatter.format(num)
-  }
-
-  useEffect(() => {
-    async function getGlq() {
-      const tokens = await Moralis.Web3API.account.getTokenBalances({})
-      const glq = tokens.filter((token) => token.symbol == 'GLQ')
-      const glqBalance = glq[0].balance
-      setBalance(Number(Math.round(glqBalance / 1e18 + 'e3') + 'e-3'))
-    }
-    setnickName(user?.get('nickname'))
-    setAddress(user?.get('ethAddress'))
-    getGlq()
-  }, [Moralis.Web3API.account, user])
-
-  useEffect(() => {
-    async function getGlqUsdValue() {
-      const options = {
-        address: process.env.NEXT_PUBLIC_GRAPHLINQ_TOKEN_CONTRACT,
-        chain: 'eth',
-        exchange: 'uniswap-v2',
-      }
-      const price = await Moralis.Web3API.token.getTokenPrice(options)
-      setUsdValue(formatCur(Number(balance * price.usdPrice), 0, 0))
-    }
-    getGlqUsdValue()
-  }, [balance, Moralis])
-
-  useEffect(() => {
-    async function setAvatar() {
-      const avatar = await user?.get('avatar')
-      console.log(avatar)
-      if (avatar) {
-        setUserAvatar(avatar._url)
-      }
-    }
-    setAvatar()
-    console.log(userAvatar)
-  }, [userAvatar, user])
+  const nickName = ''
+  const userAvatar = ''
+  const balance = 0
+  const usdValue = 0
+  const { hasCopied, onCopy } = useClipboard(account || '')
 
   return (
     <Menu autoSelect={false} isLazy>
@@ -112,13 +62,13 @@ export const DropdownMenu: React.FC = ({}) => {
             {nickName != '' ? (
               <DisplayUsername
                 userName={nickName}
-                userAddress={address}
+                userAddress={account || ''}
                 onCopy={onCopy}
                 hasCopied={hasCopied}
               />
             ) : (
               <DisplayAddress
-                userAddress={address}
+                userAddress={account || ''}
                 onCopy={onCopy}
                 hasCopied={hasCopied}
               />
@@ -189,7 +139,7 @@ export const DropdownMenu: React.FC = ({}) => {
           </NextLink>
           <MenuDivider />
           <MenuItem
-            onClick={() => logout()}
+            //onClick={() => deactivate()}
             icon={<Icon as={HiOutlineLogout} boxSize={4} />}
           >
             Disconnect
@@ -218,7 +168,9 @@ const DisplayUsername = ({
       </Text>
       <Flex flexFlow="row wrap" maxW="full" alignItems="center">
         <Text as="span" fontSize="sm" color="text.200" w="120px" isTruncated>
-          {userAddress}
+          {`${userAddress.substring(0, 6)}...${userAddress.substring(
+            userAddress.length - 4
+          )}`}
         </Text>
         <IconButton
           onClick={onCopy}
@@ -261,7 +213,9 @@ const DisplayAddress = ({
           w="120px"
           isTruncated
         >
-          {userAddress}
+          {`${userAddress.substring(0, 6)}...${userAddress.substring(
+            userAddress.length - 4
+          )}`}
         </Text>
         <IconButton
           onClick={onCopy}

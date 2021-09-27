@@ -1,5 +1,4 @@
 import type { NextPage } from 'next'
-import { useEffect, useState } from 'react'
 import {
   Container,
   Flex,
@@ -18,34 +17,14 @@ import {
 //import thumbnail from '../assets/images/thumbnail_small.png'
 //import cover from '../assets/images/thumbnail_big.png'
 import { UserAvatar } from '@/components/UserAvatar'
-import { useMoralis } from 'react-moralis'
+import { useWeb3React } from '@web3-react/core'
 
 const Profile: NextPage = () => {
-  const { user } = useMoralis()
-  const [userAddr, setAddress] = useState('')
-  const { onCopy } = useClipboard(userAddr)
+  const { account } = useWeb3React()
+  const { onCopy } = useClipboard(account || '')
 
   const userBanner =
     'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
-
-  function compactAddr(address: string) {
-    const visibleCharacters = 8
-    const visible =
-      visibleCharacters > 42
-        ? 42
-        : visibleCharacters < 2
-        ? 2
-        : visibleCharacters
-    const visibleFirst = Math.ceil(visible / 2)
-    const visibleLast = Math.floor(visible / 2)
-    return `${address.substr(0, visibleFirst + 2)}${
-      visible < 42 ? '...' : ''
-    }${address.substr(42 - visibleLast, 42)}`
-  }
-
-  useEffect(() => {
-    setAddress(user?.get('ethAddress'))
-  }, [user])
 
   return (
     <>
@@ -65,7 +44,7 @@ const Profile: NextPage = () => {
           position="absolute"
           boxSize="128px"
         >
-          <UserAvatar name={'fafifox' || userAddr} src="" />
+          <UserAvatar name={'fafifox' || account} src="" />
         </Flex>
       </Flex>
       <Container
@@ -74,10 +53,11 @@ const Profile: NextPage = () => {
       >
         <VStack spacing={1} align="center">
           <Text as="span" fontSize="3xl" fontWeight="600" color="text.50">
-            {'fafifox' || userAddr}
+            {'fafifox' || account}
           </Text>
           <Button onClick={onCopy} variant="outline" size="md" rounded="full">
-            {compactAddr(userAddr)}
+            {/* {shortenAddress(account || '')} */}
+            {account}
           </Button>
         </VStack>
         <Tabs size="lg" mt="3.5rem">
