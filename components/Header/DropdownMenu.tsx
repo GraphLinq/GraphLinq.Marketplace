@@ -32,7 +32,8 @@ import { Logout } from './Logout'
 
 export const DropdownMenu: React.FC = () => {
   const { account, library } = useWeb3React()
-  const balance = useGlqBalance(account || '', library)
+  const trueBalance = useGlqBalance(account || '', library)
+  const balance = Math.floor(Number(formatEther(trueBalance)))
 
   const nickName = ''
   const userAvatar = ''
@@ -97,7 +98,7 @@ export const DropdownMenu: React.FC = () => {
                 </Text>
                 <Flex flexFlow="row wrap" maxW="full">
                   <Text as="span" fontWeight="500">
-                    {formatEther(balance)} GLQ
+                    {balance} GLQ
                   </Text>
                   <Text as="span" color="text.200" ml="0.5rem">
                     ~{usdValue}

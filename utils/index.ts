@@ -17,3 +17,16 @@ export function shortenAddress(address: string, chars = 4): string {
   }
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
+
+export function formatCurrency(num: number, min: number, max: number) {
+  const formatConfig = {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: min,
+    maximumFractionDigits: max,
+    currencyDisplay: 'symbol',
+  }
+  const curFormatter = new Intl.NumberFormat('en-US', formatConfig)
+
+  return curFormatter.format(num)
+}
