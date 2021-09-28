@@ -5,7 +5,7 @@ import { ErrorResponse } from './error'
 
 export default class ManagerProvider {
   public static baseUrl: string =
-    process.env?.NEXT_PUBLIC_MANAGER_URL ?? 'http://localhost'
+    process.env.NEXT_PUBLIC_MANAGER_URL ?? 'http://localhost'
 
   public static authRequest(authRequest: AuthRequest): Promise<AuthResponse> {
     return new Promise<AuthResponse>((resolve, reject) => {

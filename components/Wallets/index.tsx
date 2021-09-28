@@ -10,6 +10,7 @@ import { PendingView } from './PendingView'
 import { isMobile } from 'utils/userAgent'
 import WalletService from 'services/walletService'
 import Router from 'next/router'
+import { createStandaloneToast } from '@chakra-ui/react'
 
 const MetamaskIcon = '/images/metamask.svg'
 
@@ -58,6 +59,7 @@ export const Wallets: React.FC = ({}) => {
     connectorPrevious,
   ])
 
+  const toast = createStandaloneToast()
   //sign and save user when connection is done
   useEffect(() => {
     if (!!(library && account)) {
@@ -65,20 +67,40 @@ export const Wallets: React.FC = ({}) => {
         .getSigner(account)
         .signMessage(process.env.NEXT_PUBLIC_SIGN_KEY)
         .then(async (signature: string) => {
-          window.alert(`Success!\n\n${signature}`)
+          toast({
+            title: 'Successfully signed',
+            description: `${signature}`,
+            position: 'bottom-right',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
           const result = await WalletService.authWallet(account, signature)
           if (result) {
+            toast({
+              title: 'Success',
+              description: "You're now logged-in",
+              position: 'bottom-right',
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+            })
             return Router.replace('/')
           }
         })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .catch((error: any) => {
-          window.alert(
-            'Failure!' + (error && error.message ? `\n\n${error.message}` : '')
-          )
+          toast({
+            title: 'Failure',
+            description: error && error.message ? `\n\n${error.message}` : '',
+            position: 'bottom-right',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          })
         })
     }
-  }, [account, library])
+  }, [account, library, toast])
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     let name = ''
