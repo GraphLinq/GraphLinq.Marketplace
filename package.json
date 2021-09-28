@@ -30,6 +30,7 @@
     "react-icons": "^4.2.0",
     "react-player": "^2.9.0",
     "react-responsive-carousel": "^3.2.21",
+    "swr": "^1.0.1",
     "ua-parser-js": "^0.7.28",
     "web3": "^1.5.3",
     "zustand": "^3.5.10"

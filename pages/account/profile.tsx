@@ -13,19 +13,23 @@ import {
   Button,
   useClipboard,
 } from '@chakra-ui/react'
-//import { TemplateCard } from "src/components/template/TemplateCard";
-//import thumbnail from '../assets/images/thumbnail_small.png'
-//import cover from '../assets/images/thumbnail_big.png'
 import { UserAvatar } from '@/components/UserAvatar'
 import { useWeb3React } from '@web3-react/core'
+import { shortenAddress } from 'utils'
+import TemplateCard from '@/components/TemplateCard'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const Profile: NextPage = () => {
   const { account } = useWeb3React()
   const { onCopy } = useClipboard(account || '')
+  const { data, error } = useSWR('/api/template', fetcher)
 
   const userBanner =
     'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
 
+  if (error) return <Text>Failure: Can&apos;t reach API</Text>
   return (
     <>
       <Flex
@@ -56,8 +60,7 @@ const Profile: NextPage = () => {
             {'fafifox' || account}
           </Text>
           <Button onClick={onCopy} variant="outline" size="md" rounded="full">
-            {/* {shortenAddress(account || '')} */}
-            {account}
+            {shortenAddress(account || '')}
           </Button>
         </VStack>
         <Tabs size="lg" mt="3.5rem">
@@ -93,11 +96,14 @@ const Profile: NextPage = () => {
                 justifyContent="start"
                 pt="2rem"
               >
-                {/* {Array(3)
-                  .fill(placeholder)
-                  .map((t: any, i) => {
-                    return <TemplateCard key={`${t.templateId}-${i}`} {...t} />
-                  })} */}
+                {!data
+                  ? 'loading...'
+                  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    data.map((t: any, i: number) => {
+                      return (
+                        <TemplateCard key={`${t.templateId}-${i}`} {...t} />
+                      )
+                    })}
               </Flex>
             </TabPanel>
             <TabPanel>

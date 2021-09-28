@@ -17,7 +17,6 @@ import { HiHeart, HiOutlineHeart } from 'react-icons/hi'
 
 export interface TemplateCardProps {
   templateId: number
-  imageUrl: string
   templateThumbnail: string
   images: Images[]
   title: string
@@ -37,7 +36,7 @@ interface Images {
 }
 
 interface Publisher {
-  id: string
+  id: number
   name: string
   supportEmail: string
   supportUrl: string
