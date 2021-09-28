@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^1.0.15",
     "@chakra-ui/react": "^1.6.8",
     "@emotion/react": "11",
     "@emotion/styled": "11",
@@ -19,12 +20,16 @@
     "@web3-react/portis-connector": "^6.1.9",
     "@web3-react/walletconnect-connector": "^6.2.4",
     "@web3-react/walletlink-connector": "^6.2.5",
+    "dompurify": "^2.3.3",
     "ethers": "^5.4.7",
     "framer-motion": "4",
+    "isomorphic-dompurify": "^0.15.0",
     "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.2.0",
+    "react-player": "^2.9.0",
+    "react-responsive-carousel": "^3.2.21",
     "ua-parser-js": "^0.7.28",
     "web3": "^1.5.3",
     "zustand": "^3.5.10"
