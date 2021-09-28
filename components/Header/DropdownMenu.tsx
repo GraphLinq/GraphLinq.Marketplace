@@ -21,7 +21,6 @@ import {
   HiOutlineUser,
   HiOutlineCash,
   HiOutlineCog,
-  HiOutlineLogout,
   HiOutlineClipboardCheck,
   HiOutlineClipboardCopy,
 } from 'react-icons/hi'
@@ -29,6 +28,7 @@ import NextLink from 'next/link'
 import { useWeb3React } from '@web3-react/core'
 import { useGlqBalance } from 'hooks/wallet'
 import { formatEther } from 'ethers/lib/utils'
+import { Logout } from './Logout'
 
 export const DropdownMenu: React.FC = () => {
   const { account, library } = useWeb3React()
@@ -140,12 +140,7 @@ export const DropdownMenu: React.FC = () => {
             </MenuItem>
           </NextLink>
           <MenuDivider />
-          <MenuItem
-            //onClick={() => deactivate()}
-            icon={<Icon as={HiOutlineLogout} boxSize={4} />}
-          >
-            Disconnect
-          </MenuItem>
+          <Logout />
         </MenuGroup>
       </MenuList>
     </Menu>

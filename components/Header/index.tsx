@@ -28,7 +28,7 @@ import { DropdownMenu } from './DropdownMenu'
 import { useWeb3React } from '@web3-react/core'
 
 export const Header: React.FC = ({}) => {
-  const { active } = useWeb3React()
+  const { account } = useWeb3React()
 
   return (
     <Box bgColor="brand.500" color="white" as="header">
@@ -53,7 +53,7 @@ export const Header: React.FC = ({}) => {
                 Sell Templates
               </Button>
             </NextLink>
-            {!active && (
+            {!account && (
               <NextLink href="/connect">
                 <Button variant="outline" rounded="full">
                   Connect wallet
@@ -64,7 +64,7 @@ export const Header: React.FC = ({}) => {
           <Box display={['flex', 'none']} mr="1rem">
             <MobileMenu />
           </Box>
-          {active && <DropdownMenu />}
+          {account && <DropdownMenu />}
         </Flex>
       </Container>
       <Container

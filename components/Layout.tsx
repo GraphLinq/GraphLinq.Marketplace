@@ -2,7 +2,7 @@ import { Flex, Box } from '@chakra-ui/react'
 import Head from 'next/head'
 import React from 'react'
 import Footer from './Footer'
-import { Header } from './Header/Header'
+import { Header } from './Header'
 
 export const Layout: React.FC = ({ children }) => {
   return (
