@@ -27,13 +27,15 @@ import {
 } from 'react-icons/hi'
 import NextLink from 'next/link'
 import { useWeb3React } from '@web3-react/core'
+import { useGlqBalance } from 'hooks/wallet'
+import { formatEther } from 'ethers/lib/utils'
 
 export const DropdownMenu: React.FC = () => {
-  const { account } = useWeb3React()
+  const { account, library } = useWeb3React()
+  const balance = useGlqBalance(account || '', library)
 
   const nickName = ''
   const userAvatar = ''
-  const balance = 0
   const usdValue = 0
   const { hasCopied, onCopy } = useClipboard(account || '')
 
@@ -95,7 +97,7 @@ export const DropdownMenu: React.FC = () => {
                 </Text>
                 <Flex flexFlow="row wrap" maxW="full">
                   <Text as="span" fontWeight="500">
-                    {balance} GLQ
+                    {formatEther(balance)} GLQ
                   </Text>
                   <Text as="span" color="text.200" ml="0.5rem">
                     ~{usdValue}

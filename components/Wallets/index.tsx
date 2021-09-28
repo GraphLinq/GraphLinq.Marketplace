@@ -20,7 +20,8 @@ const WALLET_VIEWS = {
 
 export const Wallets: React.FC = ({}) => {
   // important that these are destructed from the account-specific web3-react context
-  const { active, connector, activate, error } = useWeb3React()
+  const { active, account, connector, activate, error, library } =
+    useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
@@ -54,6 +55,23 @@ export const Wallets: React.FC = ({}) => {
     activePrevious,
     connectorPrevious,
   ])
+
+  useEffect(() => {
+    if (!!(library && account)) {
+      library
+        .getSigner(account)
+        .signMessage(process.env.NEXT_PUBLIC_SIGN_KEY)
+        .then((signature: string) => {
+          window.alert(`Success!\n\n${signature}`)
+        })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .catch((error: any) => {
+          window.alert(
+            'Failure!' + (error && error.message ? `\n\n${error.message}` : '')
+          )
+        })
+    }
+  }, [account, library])
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     let name = ''
