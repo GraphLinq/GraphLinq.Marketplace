@@ -8,6 +8,8 @@ import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { Option } from './Option'
 import { PendingView } from './PendingView'
 import { isMobile } from 'utils/userAgent'
+import WalletService from 'services/walletService'
+import Router from 'next/router'
 
 const MetamaskIcon = '/images/metamask.svg'
 
@@ -56,13 +58,18 @@ export const Wallets: React.FC = ({}) => {
     connectorPrevious,
   ])
 
+  //sign and save user when connection is done
   useEffect(() => {
     if (!!(library && account)) {
       library
         .getSigner(account)
         .signMessage(process.env.NEXT_PUBLIC_SIGN_KEY)
-        .then((signature: string) => {
+        .then(async (signature: string) => {
           window.alert(`Success!\n\n${signature}`)
+          const result = await WalletService.authWallet(account, signature)
+          if (result) {
+            return Router.replace('/')
+          }
         })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .catch((error: any) => {
