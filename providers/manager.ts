@@ -9,7 +9,7 @@ export default class ManagerProvider {
 
   public static authRequest(authRequest: AuthRequest): Promise<AuthResponse> {
     return new Promise<AuthResponse>((resolve, reject) => {
-      fetch(`${this.baseUrl}/wallets/auth`, {
+      fetch(`${this.baseUrl}/user/auth`, {
         method: 'post',
         body: JSON.stringify(authRequest),
         headers: { 'Content-Type': 'application/json' },
