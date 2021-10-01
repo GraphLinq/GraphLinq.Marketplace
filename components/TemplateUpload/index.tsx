@@ -37,6 +37,9 @@ interface TemplateUploadProps {
   setFileUpload: React.Dispatch<
     React.SetStateAction<{ loaded: boolean; file: File | null }>
   >
+  setCompressedTemplate: React.Dispatch<
+    React.SetStateAction<string | undefined>
+  >
 }
 
 export const TemplateUpload: React.FC<TemplateUploadProps> = (props) => {
@@ -50,7 +53,6 @@ export const TemplateUpload: React.FC<TemplateUploadProps> = (props) => {
   const handleCategoryChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    console.log(event.target.value)
     props.setCategory(event.target.value)
   }
   const handleDescriptionChange = (
@@ -64,11 +66,12 @@ export const TemplateUpload: React.FC<TemplateUploadProps> = (props) => {
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
-      console.log(e.target.files.item(0))
       props.setFileUpload({
         loaded: true,
         file: e.target.files.item(0),
       })
+      const result = await e.target.files.item(0)?.text()
+      props.setCompressedTemplate(result)
     }
   }
 

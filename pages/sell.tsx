@@ -1,8 +1,9 @@
 import type { NextPage } from 'next'
+import { useEffect, useState } from 'react'
 import { Container, Heading, useBoolean } from '@chakra-ui/react'
 import { TemplateUpload } from '@/components/TemplateUpload'
-import { TemplateSettings } from '@/components/TemplateSettings'
-import { useState } from 'react'
+import { TemplateRoot, TemplateSettings } from '@/components/TemplateSettings'
+import GraphService from 'services/graphService'
 
 const Sell: NextPage = () => {
   const [step, setStep] = useBoolean()
@@ -14,6 +15,20 @@ const Sell: NextPage = () => {
     loaded: boolean
     file: File | null
   }>({ loaded: false, file: null })
+  const [compressedTemplate, setCompressedTemplate] = useState<string>()
+  const [decompressedTemplate, setDecompressedTemplate] =
+    useState<TemplateRoot>({ name: '', nodes: [], comments: [] })
+
+  useEffect(() => {
+    const fetchGraphData = async (template: string) => {
+      const result = await GraphService.decompressGraph(template)
+      setDecompressedTemplate(JSON.parse(result))
+    }
+    if (compressedTemplate != undefined) {
+      fetchGraphData(compressedTemplate)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [compressedTemplate])
 
   return (
     <Container
@@ -38,9 +53,13 @@ const Sell: NextPage = () => {
           setDescription={setDescription}
           fileUpload={fileUpload}
           setFileUpload={setFileUpload}
+          setCompressedTemplate={setCompressedTemplate}
         />
       ) : (
-        <TemplateSettings setStep={setStep} />
+        <TemplateSettings
+          setStep={setStep}
+          decompressedTemplate={decompressedTemplate}
+        />
       )}
     </Container>
   )
