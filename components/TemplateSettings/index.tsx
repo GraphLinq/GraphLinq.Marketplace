@@ -59,12 +59,12 @@ interface TemplateSettingsProps {
     readonly off: () => void
     readonly toggle: () => void
   }
+  title: string
+  description: string
+  price: string
+  category: string
   decompressedTemplate: TemplateRoot
 }
-
-/** @todo
- * publish template
- */
 
 export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
   const [templateData, setTemplateData] = useState<TemplateRoot>(
@@ -93,15 +93,21 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const compressGraph = async (template: string) => {
-    const compData = await GraphService.compressGraph(template)
+  const compressGraph = async (graphData: string) => {
+    const compData = await GraphService.compressGraph(graphData)
     return compData
   }
 
   async function publishTemplate() {
     compressGraph(JSON.stringify(templateData)).then((data) => {
-      //call API on publish endpoint
-      console.log(data)
+      //@todo call API on publish endpoint
+      console.log({
+        name: props.title,
+        description: props.description,
+        category: Number(props.category),
+        price: Number(props.price),
+        data: data,
+      })
     })
   }
 

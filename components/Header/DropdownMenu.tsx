@@ -29,15 +29,28 @@ import { useWeb3React } from '@web3-react/core'
 import { useGlqBalance } from 'hooks/wallet'
 import { formatEther } from 'ethers/lib/utils'
 import { Logout } from './Logout'
+import useSWR from 'swr'
+import { formatCurrency } from 'utils'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export const DropdownMenu: React.FC = () => {
   const { account, library } = useWeb3React()
   const trueBalance = useGlqBalance(account || '', library)
   const balance = Math.floor(Number(formatEther(trueBalance)))
+  const { data, error } = useSWR(
+    `${process.env.NEXT_PUBLIC_PROXY_API_URL}/706364f99ee8354232b99bc8060fe59b0442986c1e5b147900e825f905080245/glq`,
+    fetcher
+  )
+
+  const glqUsdValue = () => {
+    if (error) return 'Unavailable'
+    if (!data) return 'Loading...'
+    return formatCurrency(balance * Number(data.price), 0, 2)
+  }
 
   const nickName = ''
   const userAvatar = ''
-  const usdValue = 0
   const { hasCopied, onCopy } = useClipboard(account || '')
 
   return (
@@ -101,7 +114,7 @@ export const DropdownMenu: React.FC = () => {
                     {balance} GLQ
                   </Text>
                   <Text as="span" color="text.200" ml="0.5rem">
-                    ~{usdValue}
+                    {`~${glqUsdValue()}`}
                   </Text>
                 </Flex>
               </SkeletonText>

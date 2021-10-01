@@ -58,6 +58,10 @@ const Sell: NextPage = () => {
       ) : (
         <TemplateSettings
           setStep={setStep}
+          title={title}
+          description={description}
+          category={category}
+          price={price}
           decompressedTemplate={decompressedTemplate}
         />
       )}
