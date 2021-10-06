@@ -11,10 +11,19 @@ const Sell: NextPage = () => {
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
+  const [thumbnail, setThumbnail] = useState('')
+  const [youtubeLink, setYoutubeLink] = useState('')
+
   const [fileUpload, setFileUpload] = useState<{
     loaded: boolean
     file: File | null
   }>({ loaded: false, file: null })
+
+  const [fileImagesUpload, setFileImagesUpload] = useState<{
+    loaded: boolean
+    files: File[]
+  }>({ loaded: false, files: [] })
+
   const [compressedTemplate, setCompressedTemplate] = useState<string>()
   const [decompressedTemplate, setDecompressedTemplate] =
     useState<TemplateRoot>({ name: '', nodes: [], comments: [] })
@@ -51,8 +60,14 @@ const Sell: NextPage = () => {
           setCategory={setCategory}
           description={description}
           setDescription={setDescription}
+          thumbnail={thumbnail}
+          setThumbnail={setThumbnail}
+          youtubeLink={youtubeLink}
+          setYoutubeLink={setYoutubeLink}
           fileUpload={fileUpload}
           setFileUpload={setFileUpload}
+          fileImagesUpload={fileImagesUpload}
+          setFileImagesUpload={setFileImagesUpload}
           setCompressedTemplate={setCompressedTemplate}
         />
       ) : (
@@ -63,6 +78,8 @@ const Sell: NextPage = () => {
           category={category}
           price={price}
           decompressedTemplate={decompressedTemplate}
+          youtubeLink={youtubeLink}
+          fileImagesUpload={fileImagesUpload}
         />
       )}
     </Container>

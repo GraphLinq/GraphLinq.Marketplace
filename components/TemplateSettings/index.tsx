@@ -64,6 +64,11 @@ interface TemplateSettingsProps {
   price: string
   category: string
   decompressedTemplate: TemplateRoot
+  youtubeLink: string
+  fileImagesUpload: {
+    loaded: boolean
+    files: File[]
+  }
 }
 
 export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
@@ -107,6 +112,8 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
         category: Number(props.category),
         price: Number(props.price),
         data: data,
+        youtube: props.youtubeLink,
+        images: props.fileImagesUpload.files,
       })
     })
   }
