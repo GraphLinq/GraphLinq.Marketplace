@@ -2,7 +2,7 @@ import React from 'react'
 import { StarIcon } from '@chakra-ui/icons'
 import { Text, Stack, Flex, Divider, Icon } from '@chakra-ui/react'
 import { FaHeart } from 'react-icons/fa'
-import { TemplateCardProps } from '@/components/TemplateCard'
+import { TemplateCardProps } from 'constants/template'
 
 /* interface TemplateRatingProps {
 

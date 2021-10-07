@@ -20,13 +20,12 @@ import {
 } from '@chakra-ui/react'
 import { HiEye } from 'react-icons/hi'
 import MotionBox from '@/components/MotionBox'
-import { TemplateCardProps } from '@/components/TemplateCard'
-import { Rating } from './Rating'
-//import DOMPurify from 'dompurify'
+import { Rating } from '@/components/Rating'
 import DOMPurify from 'isomorphic-dompurify'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import ReactPlayer from 'react-player'
+import { TemplateCardProps } from 'constants/template'
 
 /* interface TemplateModalProps {
 

@@ -61,3 +61,47 @@ export const CATEGORY_INFO: CategoryInfos = {
     slug: 'bot-discord',
   },
 }
+
+export interface TemplateCardProps {
+  templateId: number
+  templateThumbnail: string
+  images: Images[]
+  title: string
+  description: string
+  downloadSize: string
+  slug: string
+  publisher: Publisher
+  category: Category
+  price: Price
+  rating: Rating
+  favoriteCount: number
+}
+
+interface Images {
+  imageUrl: string
+  type: string
+}
+
+interface Publisher {
+  id: number
+  name: string
+  supportEmail: string
+  supportUrl: string
+}
+
+interface Category {
+  id: number
+  name: string
+  longName: string
+  slug: string
+}
+
+interface Price {
+  price: number
+  isFree: boolean
+}
+
+interface Rating {
+  average: number
+  count: number
+}
