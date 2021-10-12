@@ -26,7 +26,7 @@ import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import ReactPlayer from 'react-player'
 import { TemplateCardProps } from 'constants/template'
-
+import NextLink from 'next/link'
 /* interface TemplateModalProps {
 
 } */
@@ -210,12 +210,16 @@ export const TemplateModal: React.FC<TemplateCardProps> = (props) => {
             ></Flex>
           </ModalBody>
           <ModalFooter>
-            <Button size="lg" rounded="lg" mr="0.5rem">
-              Buy Template
-            </Button>
-            <Button size="lg" rounded="lg" variant="outline">
-              View Full Details
-            </Button>
+            <NextLink href="#buy">
+              <Button size="lg" rounded="lg" mr="0.5rem">
+                Buy Template
+              </Button>
+            </NextLink>
+            <NextLink href={`/templates/${props.templateId}`}>
+              <Button size="lg" rounded="lg" variant="outline">
+                View Full Details
+              </Button>
+            </NextLink>
           </ModalFooter>
         </ModalContent>
       </Modal>

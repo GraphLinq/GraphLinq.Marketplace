@@ -46,8 +46,14 @@ export const Header: React.FC = ({}) => {
             <Logo w={['6rem', '10rem']} h="auto" />
           </Link>
         </NextLink>
+
         <Flex alignItems="center">
           <Box display={['none', 'flex']} mr="1rem">
+            <NextLink href="/offers">
+              <Button rounded="full" mr="1rem">
+                Offers
+              </Button>
+            </NextLink>
             <NextLink href="/sell">
               <Button rounded="full" mr="1rem">
                 Sell Templates

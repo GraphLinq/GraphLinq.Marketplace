@@ -1,19 +1,19 @@
 import React from 'react'
-import { Container, Flex } from '@chakra-ui/react'
+import { Container, Stack, Heading, StackDivider } from '@chakra-ui/react'
 //import { useRouter } from 'next/router'
 import useSWR from 'swr'
-import { TemplateDetails } from '@/components/TemplateDetails'
+import { OfferCard } from '@/components/OfferCard'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-const TemplatePage: React.FC = ({}) => {
+const OfferPage: React.FC = ({}) => {
   //const router = useRouter()
   //const { templateId } = router.query
   /* const { data, error } = useSWR(
     `http://127.0.0.1.4561/templates/${templateId}`,
     fetcher
   ) */
-  const { data, error } = useSWR(`/api/template`, fetcher)
+  const { data, error } = useSWR(`/api/offer`, fetcher)
 
   if (error) return <>An error has occurred.</>
   if (!data) return <>Loading...</>
@@ -24,11 +24,21 @@ const TemplatePage: React.FC = ({}) => {
       display="flex"
       flexDirection="column"
     >
-      <Flex p={[0, 6]} flexDir="column" justifyContent="start">
-        <TemplateDetails data={data[0]} />
-      </Flex>
+      <Heading size="xl" color="white">
+        Offers
+      </Heading>
+      <Stack
+        py={4}
+        spacing={4}
+        align="stretch"
+        divider={<StackDivider borderColor="brand.200" />}
+      >
+        {data.map((offer: OfferCard, i: number) => {
+          return <OfferCard key={`offer-card-${i}`} data={offer} />
+        })}
+      </Stack>
     </Container>
   )
 }
 
-export default TemplatePage
+export default OfferPage
