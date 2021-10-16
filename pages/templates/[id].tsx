@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Container, Flex, Icon, Box } from '@chakra-ui/react'
-//import { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { TemplateDetails } from '@/components/TemplateDetails'
 import { FaCog } from 'react-icons/fa'
@@ -9,13 +9,12 @@ import NextLink from 'next/link'
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const TemplatePage: React.FC = ({}) => {
-  //const router = useRouter()
-  //const { templateId } = router.query
-  /* const { data, error } = useSWR(
-    `http://127.0.0.1.4561/templates/${templateId}`,
+  const router = useRouter()
+  const { id } = router.query
+  const { data, error } = useSWR(
+    `http://127.0.0.1:4561/templates/${id}`,
     fetcher
-  ) */
-  const { data, error } = useSWR(`/api/template`, fetcher)
+  )
 
   if (error) return <>An error has occurred.</>
   if (!data) return <>Loading...</>
@@ -29,13 +28,13 @@ const TemplatePage: React.FC = ({}) => {
       <Flex p={[0, 6]} flexDir="column" justifyContent="start">
         <Box placeSelf="end" p={[0, 6]}>
           {/* button edit owner only */}
-          <NextLink href={`/templates/edit?id=${data[0].templateId}`}>
+          <NextLink href={`/templates/edit?id=${data.results.id}`}>
             <Button size="md" leftIcon={<Icon as={FaCog} />}>
               Edit
             </Button>
           </NextLink>
         </Box>
-        <TemplateDetails data={data[0]} />
+        <TemplateDetails {...data.results} />
       </Flex>
     </Container>
   )

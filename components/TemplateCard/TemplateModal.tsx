@@ -15,30 +15,26 @@ import {
   Heading,
   VStack,
   Link,
-  Image,
   useBreakpointValue,
 } from '@chakra-ui/react'
 import { HiEye } from 'react-icons/hi'
 import MotionBox from '@/components/MotionBox'
-import { Rating } from '@/components/Rating'
 import DOMPurify from 'isomorphic-dompurify'
-import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import ReactPlayer from 'react-player'
-import { TemplateCardProps } from 'constants/template'
+import { Templates } from 'pages'
 import NextLink from 'next/link'
 /* interface TemplateModalProps {
 
 } */
 
-export const TemplateModal: React.FC<TemplateCardProps> = (props) => {
+export const TemplateModal: React.FC<Templates> = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const safeDescription = DOMPurify.sanitize(props.description, {
     FORBID_TAGS: ['style', 'script', 'img'],
   })
 
-  const YoutubeSlide = ({
+  /*const YoutubeSlide = ({
     url,
     isSelected,
   }: {
@@ -67,7 +63,7 @@ export const TemplateModal: React.FC<TemplateCardProps> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const customRenderItem = (item: any, props: any) => {
     return <item.type {...item.props} {...props} />
-  }
+  } */
 
   const infoMotion = {
     rest: { opacity: 0, ease: 'easeOut', duration: 0.2, type: 'tween' },
@@ -129,7 +125,7 @@ export const TemplateModal: React.FC<TemplateCardProps> = (props) => {
                 bgColor="brand.700"
                 borderRadius="md"
               >
-                <Carousel
+                {/* <Carousel
                   showArrows={true}
                   renderItem={customRenderItem}
                   showStatus={false}
@@ -141,7 +137,7 @@ export const TemplateModal: React.FC<TemplateCardProps> = (props) => {
                       url={image.imageUrl}
                     />
                   ))}
-                </Carousel>
+                </Carousel> */}
               </Flex>
               <Flex
                 direction="column"
@@ -151,29 +147,31 @@ export const TemplateModal: React.FC<TemplateCardProps> = (props) => {
               >
                 <Box w="full">
                   <Box>
-                    <Heading size="md">{props.title}</Heading>
+                    <Heading size="md">{props.name}</Heading>
                     <Flex
                       my="12px"
                       justifyContent="space-between"
                       alignItems="center"
                     >
-                      <Link
-                        href="#author"
-                        color="text.200"
-                        _hover={{ color: 'primary.100' }}
-                      >
-                        <Text fontSize="sm" casing="uppercase" isTruncated>
-                          {props.publisher.name}
-                        </Text>
-                      </Link>
-                      <Rating {...props} />
+                      {/* @todo direct to user profile */}
+                      <NextLink href={`/users/${props.user.id}`}>
+                        <Link
+                          color="text.200"
+                          _hover={{ color: 'primary.100' }}
+                        >
+                          <Text fontSize="sm" casing="uppercase" isTruncated>
+                            {props.user.name}
+                          </Text>
+                        </Link>
+                      </NextLink>
+                      {/* <Rating {...props} /> */}
                     </Flex>
                   </Box>
                   <Box fontSize="2xl" fontWeight="bold">
-                    250 GLQ
+                    {props.template_cost} GLQ
                   </Box>
                   <VStack spacing={3} align="stretch" mt="20px">
-                    <Flex justifyContent="space-between">
+                    {/* <Flex justifyContent="space-between">
                       <Text color="text.100" fontWeight="500">
                         Execution cost
                       </Text>
@@ -184,18 +182,25 @@ export const TemplateModal: React.FC<TemplateCardProps> = (props) => {
                         File Size
                       </Text>
                       <Text>177.7 Ko</Text>
-                    </Flex>
+                    </Flex> */}
                     <Flex justifyContent="space-between">
                       <Text color="text.100" fontWeight="500">
                         Latest version
                       </Text>
-                      <Text>2.1</Text>
+                      <Text>{props.versions.at(-1)?.current_version}</Text>
                     </Flex>
                     <Flex justifyContent="space-between">
                       <Text color="text.100" fontWeight="500">
                         Latest release date
                       </Text>
-                      <Text>May 21, 2021</Text>
+                      {/* <Text>May 21, 2021</Text> */}
+                      <Text>
+                        {new Intl.DateTimeFormat('en-GB', {
+                          dateStyle: 'long',
+                        }).format(
+                          Date.parse(props.versions.at(-1)?.updatedAt || '')
+                        )}
+                      </Text>
                     </Flex>
                   </VStack>
                 </Box>
@@ -210,12 +215,13 @@ export const TemplateModal: React.FC<TemplateCardProps> = (props) => {
             ></Flex>
           </ModalBody>
           <ModalFooter>
+            {/* @todo handle buy */}
             <NextLink href="#buy">
               <Button size="lg" rounded="lg" mr="0.5rem">
                 Buy Template
               </Button>
             </NextLink>
-            <NextLink href={`/templates/${props.templateId}`}>
+            <NextLink href={`/templates/${props.id}`}>
               <Button size="lg" rounded="lg" variant="outline">
                 View Full Details
               </Button>

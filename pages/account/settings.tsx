@@ -15,6 +15,7 @@ import {
 import React, { createRef, useState } from 'react'
 import { UserAvatar } from '@/components/UserAvatar'
 import { HiUpload } from 'react-icons/hi'
+import UserService from 'services/userService'
 
 const Settings: NextPage = () => {
   const [nickName, setNickname] = useState('')
@@ -31,7 +32,14 @@ const Settings: NextPage = () => {
 
   async function updateProfile() {
     try {
-      if (nickName != '') console.log('nickname set')
+      if (nickName != '') {
+        const result = await UserService.updateNickname({ name: nickName })
+        if (result) {
+          console.log('nickname updated')
+        } else {
+          console.log(result)
+        }
+      }
       if (fileUpload.preview != '') {
         console.log('avatar set')
       }
@@ -80,7 +88,7 @@ const Settings: NextPage = () => {
           />
           <Flex alignItems="center">
             <UserAvatar
-              name={nickName}
+              name={''}
               size="xl"
               src={fileUpload.preview || nickName || userAvatar}
             />

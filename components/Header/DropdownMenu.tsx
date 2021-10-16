@@ -32,24 +32,29 @@ import { Logout } from './Logout'
 import useSWR from 'swr'
 import { formatCurrency } from 'utils'
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
+const balanceFetcher = (url: string) => fetch(url).then((res) => res.json())
+const userFetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export const DropdownMenu: React.FC = () => {
   const { account, library } = useWeb3React()
+
   const trueBalance = useGlqBalance(account || '', library)
   const balance = Math.floor(Number(formatEther(trueBalance)))
   const { data, error } = useSWR(
     `${process.env.NEXT_PUBLIC_PROXY_API_URL}/706364f99ee8354232b99bc8060fe59b0442986c1e5b147900e825f905080245/glq`,
-    fetcher
+    balanceFetcher
   )
-
   const glqUsdValue = () => {
     if (error) return 'Unavailable'
     if (!data) return 'Loading...'
     return formatCurrency(balance * Number(data.price), 0, 2)
   }
+  const session = JSON.parse(localStorage.getItem('session') as string) || ''
+  const { data: user } = useSWR(
+    `${process.env.NEXT_PUBLIC_MANAGER_URL}/users/${session.account_id}`,
+    userFetcher
+  )
 
-  const nickName = ''
   const userAvatar = ''
   const { hasCopied, onCopy } = useClipboard(account || '')
 
@@ -64,8 +69,8 @@ export const DropdownMenu: React.FC = () => {
               size="sm"
               bgColor="text.300"
               color="text.50"
-              name={nickName}
-              src={userAvatar || nickName}
+              name={''}
+              src={userAvatar}
             />
           </>
         }
@@ -75,9 +80,9 @@ export const DropdownMenu: React.FC = () => {
       <MenuList bgColor="brand.500">
         <MenuGroup>
           <Flex py="0.4rem" px="0.8rem" flexDirection="column">
-            {nickName != '' ? (
+            {user?.name ? (
               <DisplayUsername
-                userName={nickName}
+                userName={user.name || ''}
                 userAddress={account || ''}
                 onCopy={onCopy}
                 hasCopied={hasCopied}

@@ -7,26 +7,18 @@ import {
   Heading,
   VStack,
   Link,
-  Image,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import { Rating } from '@/components/Rating'
 import DOMPurify from 'isomorphic-dompurify'
-import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import ReactPlayer from 'react-player'
-import { TemplateCardProps } from 'constants/template'
+import { Templates } from 'pages'
 
-interface TemplateModalProps {
-  data: TemplateCardProps
-}
-
-export const TemplateDetails: React.FC<TemplateModalProps> = (props) => {
-  const safeDescription = DOMPurify.sanitize(props.data.description, {
+export const TemplateDetails: React.FC<Templates> = (props) => {
+  const safeDescription = DOMPurify.sanitize(props.description, {
     FORBID_TAGS: ['style', 'script', 'img'],
   })
 
-  const YoutubeSlide = ({
+  /* const YoutubeSlide = ({
     url,
     isSelected,
   }: {
@@ -57,7 +49,7 @@ export const TemplateDetails: React.FC<TemplateModalProps> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const customRenderItem = (item: any, props: any) => {
     return <item.type {...item.props} {...props} />
-  }
+  } */
 
   return (
     <>
@@ -69,10 +61,10 @@ export const TemplateDetails: React.FC<TemplateModalProps> = (props) => {
         <Flex
           w={['full', '600px']}
           h={['auto', '360px']}
-          bgColor="brand.700"
+          bgColor="brand.900"
           borderRadius="md"
         >
-          <Carousel
+          {/* <Carousel
             showArrows={true}
             renderItem={customRenderItem}
             showStatus={false}
@@ -84,7 +76,7 @@ export const TemplateDetails: React.FC<TemplateModalProps> = (props) => {
                 url={image.imageUrl}
               />
             ))}
-          </Carousel>
+          </Carousel> */}
         </Flex>
         <Flex
           direction="column"
@@ -95,7 +87,7 @@ export const TemplateDetails: React.FC<TemplateModalProps> = (props) => {
           <Box w="full">
             <Box>
               <Heading size={useBreakpointValue(['lg', 'lg', 'xl'])}>
-                {props.data.title}
+                {props.name}
               </Heading>
               <Flex
                 my="12px"
@@ -108,17 +100,17 @@ export const TemplateDetails: React.FC<TemplateModalProps> = (props) => {
                   _hover={{ color: 'primary.100' }}
                 >
                   <Text fontSize="sm" casing="uppercase" isTruncated>
-                    {props.data.publisher.name}
+                    {props.user.name}
                   </Text>
                 </Link>
-                <Rating {...props.data} />
+                {/* <Rating {...props.data} /> */}
               </Flex>
             </Box>
             <Text fontSize={['xl', '2xl']} fontWeight="bold">
               250 GLQ
             </Text>
             <VStack spacing={3} align="stretch" mt="20px">
-              <Flex justifyContent="space-between">
+              {/* <Flex justifyContent="space-between">
                 <Text color="text.100" fontWeight="500">
                   Execution cost
                 </Text>
@@ -129,18 +121,22 @@ export const TemplateDetails: React.FC<TemplateModalProps> = (props) => {
                   File Size
                 </Text>
                 <Text>177.7 Ko</Text>
-              </Flex>
+              </Flex> */}
               <Flex justifyContent="space-between">
                 <Text color="text.100" fontWeight="500">
                   Latest version
                 </Text>
-                <Text>2.1</Text>
+                <Text>{props.versions.at(-1)?.current_version}</Text>
               </Flex>
               <Flex justifyContent="space-between">
                 <Text color="text.100" fontWeight="500">
                   Latest release date
                 </Text>
-                <Text>May 21, 2021</Text>
+                <Text>
+                  {new Intl.DateTimeFormat('en-GB', {
+                    dateStyle: 'long',
+                  }).format(Date.parse(props.versions.at(-1)?.updatedAt || ''))}
+                </Text>
               </Flex>
             </VStack>
           </Box>
@@ -149,16 +145,13 @@ export const TemplateDetails: React.FC<TemplateModalProps> = (props) => {
       <Flex
         color="text.50"
         w="full"
-        pb="2rem"
-        pl={['0', '2rem']}
+        my="2rem"
         dangerouslySetInnerHTML={{ __html: safeDescription }}
       ></Flex>
-      <Flex pl={['0', '2rem']} mb="1rem">
+      <Flex mb="1rem">
+        {/* @todo handle buy */}
         <Button size="lg" rounded="lg" mr="0.5rem">
           Buy Template
-        </Button>
-        <Button size="lg" rounded="lg" variant="outline">
-          View Full Details
         </Button>
       </Flex>
     </>

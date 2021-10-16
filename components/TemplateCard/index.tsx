@@ -7,17 +7,13 @@ import {
   LinkBox,
   LinkOverlay,
   AspectRatio,
-  IconButton,
-  Icon,
 } from '@chakra-ui/react'
 import MotionLink from '@/components/MotionLink'
 import { TemplateModal } from './TemplateModal'
-import { Rating } from '@/components/Rating'
-import { HiHeart, HiOutlineHeart } from 'react-icons/hi'
-import { TemplateCardProps } from 'constants/template'
+import { Templates } from 'pages'
 
-const TemplateCard: React.FC<TemplateCardProps> = (props) => {
-  const isFavorite = false
+const TemplateCard: React.FC<Templates> = (props) => {
+  //const isFavorite = false
 
   return (
     <Box
@@ -44,7 +40,8 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
               rounded="base"
             >
               <Box
-                bgImage={`url("${props.templateThumbnail}")`}
+                //bgImage={`url("${props.images[0]}")`}
+                bgImage={`url("/images/thumbnail_small.png")`}
                 bgSize="100% 100%"
                 bgPos="center top"
                 w="full"
@@ -52,6 +49,7 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
               />
             </Box>
           </AspectRatio>
+          {/* favorite button
           <Box position="absolute" top="4px" right="6px">
             {isFavorite ? (
               <IconButton
@@ -69,7 +67,7 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
                 icon={<Icon as={HiOutlineHeart} />}
               />
             )}
-          </Box>
+          </Box> */}
           <TemplateModal {...props} />
         </Box>
       </MotionLink>
@@ -81,7 +79,7 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
           mt="0.5rem"
         >
           <Text fontSize="xs" casing="uppercase" isTruncated>
-            {props.publisher.name}
+            {props.user.name}
           </Text>
         </Link>
         <LinkBox>
@@ -92,12 +90,13 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
               lineHeight="normal"
               isTruncated
             >
-              {props.title}
+              {props.name}
             </Text>
           </LinkOverlay>
-          <Rating {...props} />
+          {/* <Rating {...props} /> */}
           <Text fontSize="md">
-            {props.price.isFree ? 'FREE' : props.price.price + ' GLQ'}
+            {/* {props.price.isFree ? 'FREE' : props.price.price + ' GLQ'} */}
+            {props.template_cost + ' GLQ'}
           </Text>
         </LinkBox>
       </Flex>

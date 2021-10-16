@@ -20,11 +20,18 @@ import TemplateCard from '@/components/TemplateCard'
 import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
+const userFetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const Profile: NextPage = () => {
   const { account } = useWeb3React()
   const { onCopy } = useClipboard(account || '')
   const { data, error } = useSWR('/api/template', fetcher)
+
+  const session = JSON.parse(localStorage.getItem('session') as string)
+  const { data: user } = useSWR(
+    `${process.env.NEXT_PUBLIC_MANAGER_URL}/users/${session.account_id}`,
+    userFetcher
+  )
 
   const userBanner =
     'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
@@ -48,7 +55,7 @@ const Profile: NextPage = () => {
           position="absolute"
           boxSize="128px"
         >
-          <UserAvatar name={'fafifox' || account} src="" />
+          <UserAvatar name={user?.name || account} src="" />
         </Flex>
       </Flex>
       <Container
@@ -57,7 +64,7 @@ const Profile: NextPage = () => {
       >
         <VStack spacing={1} align="center">
           <Text as="span" fontSize="3xl" fontWeight="600" color="text.50">
-            {'fafifox' || account}
+            {user?.name || account}
           </Text>
           <Button onClick={onCopy} variant="outline" size="md" rounded="full">
             {shortenAddress(account || '')}

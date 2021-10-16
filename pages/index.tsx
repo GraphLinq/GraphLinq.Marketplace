@@ -16,64 +16,68 @@ import {
 } from '@chakra-ui/react'
 import { HiOutlineAdjustments } from 'react-icons/hi'
 import TemplateCard from '@/components/TemplateCard'
+import useSWR from 'swr'
 
-//marketplace.graphlinq.io
-//marketplace.graphlinq.io/publishers/<id>
-//marketplace.graphlinq.io/templates/<category>/<id>
-const thumbnail = '/images/thumbnail_small.png'
-const templatePlaceholder = {
-  templateId: 0,
-  templateThumbnail: thumbnail,
-  images: [
-    {
-      imageUrl: 'https://www.youtube.com/embed/fuwFbM408Ys',
-      type: 'youtube',
-    },
-    {
-      imageUrl: '/images/template-image-example.png',
-      type: 'screenshot',
-    },
-  ],
-  imageAlt: 'Cool graph to automate thing',
-  title: 'Graph Template Title',
-  description: `Watch an ERC-20 smart contract new transactions and deposit, save in the Redis key/value storage any deposited amount from new addresses and report activity on a discord webhook channel.<br><br>Template description lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
-  downloadSize: '186301920',
-  slug: 'template-0',
-  dateRelease: '2021-05-10T12:11:13Z',
-  dateLastUpdate: '2021-05-21T12:11:13Z',
-  publisher: {
-    id: 1234,
-    name: 'fafifox',
-    supportEmail: 'team@graphlinq.io',
-    supportUrl: 'https://graphlinq.io/',
-  },
-  category: {
-    id: 1,
-    name: 'DeFi',
-    longName: 'Decentralized Finance',
-    slug: 'decentralized-finance',
-  },
-  price: {
-    price: 250,
-    isFree: false,
-  },
-  rating: {
-    average: 4,
-    count: 61,
-  },
-  favoriteCount: 51,
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+const PAGE_SIZE = 6
+
+export interface Templates {
+  id: number
+  name: string
+  description: string
+  youtube: string
+  template_cost: number
+  category: Category
+  user: User
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  likes: any[]
+  images: string[]
+  versions: Version[]
+}
+
+interface Category {
+  id: number
+  name: string
+  long_name: string
+  slug: string
+}
+
+interface User {
+  id: number
+  name: string
+  email: string
+  publisherName: string
+  is_admin: boolean
+}
+
+interface Version {
+  id: number
+  current_version: string
+  execution_cost: string
+  createdAt: string
+  updatedAt: string
 }
 
 const Home: NextPage = () => {
   const variant = useBreakpointValue({ base: '', md: 'scrollbar-x' })
 
+  //const { data, error } = useSWRInfinite(`${process.env.NEXT_PUBLIC_MANAGER_URL}/templates/?page=${index + 1}&limit=${PAGE_SIZE}`, fetcher)
+  const { data, error } = useSWR(
+    `${
+      process.env.NEXT_PUBLIC_MANAGER_URL
+    }/templates/?page=${1}&limit=${PAGE_SIZE}`,
+    fetcher
+  )
+
+  if (error) return <>An error has occurred.</>
+  if (!data) return <>Loading...</>
   return (
     <>
       <Container
         maxW={['container.sm', 'container.md', 'container.xl']}
         my="3.5rem"
       >
-        <Heading fontSize="1.5rem">Staff picks</Heading>
+        {/* <Heading fontSize="1.5rem">Staff picks</Heading>
         <Flex
           flexDir="row"
           justifyContent="start"
@@ -87,7 +91,7 @@ const Home: NextPage = () => {
             .map((t: any, i) => {
               return <TemplateCard key={`${t.templateId}-${i}`} {...t} />
             })}
-        </Flex>
+        </Flex> */}
         <Flex
           w="full"
           mt="3.5rem"
@@ -193,15 +197,12 @@ const Home: NextPage = () => {
           flexDir="row"
           wrap="wrap"
           flex="0 1 auto"
-          justifyContent="center"
+          justifyContent="start"
           pt="2rem"
         >
-          {Array(12)
-            .fill(templatePlaceholder)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .map((t: any, i) => {
-              return <TemplateCard key={`${t.templateId}-${i}`} {...t} />
-            })}
+          {data.results.map((t: Templates, i: number) => {
+            return <TemplateCard key={`${t.id}-${i}`} {...t} />
+          })}
         </Flex>
         <Button w="full" variant="outline" rounded="full">
           Load more

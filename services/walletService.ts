@@ -12,7 +12,11 @@ export default class WalletService {
       if (result) {
         localStorage.setItem(
           'session',
-          JSON.stringify({ addr: addr, token: result.token })
+          JSON.stringify({
+            addr: addr,
+            token: result.token,
+            account_id: result.id,
+          })
         )
       }
       return result.auth

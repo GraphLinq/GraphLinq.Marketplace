@@ -7,6 +7,8 @@ import { CompressGraphRequest } from './requests/compress'
 import { CompressGraphResponse } from './responses/compress'
 import PublishResponse from './responses/publish'
 import PublishRequest from './requests/publish'
+import UpdateNicknameRequest from './requests/user'
+import UpdateNicknameResponse from './responses/user'
 
 export default class ManagerProvider {
   public static baseUrl: string =
@@ -90,6 +92,29 @@ export default class ManagerProvider {
         .then((res: any) => {
           res.status === 200
             ? resolve(res.json() as PublishResponse)
+            : reject(res.json() as ErrorResponse)
+        })
+        .catch((error: any) => reject(error))
+    })
+  }
+
+  public static updateNickname(
+    publishTemplate: UpdateNicknameRequest,
+    token: string,
+    id: number
+  ): Promise<UpdateNicknameResponse> {
+    return new Promise<UpdateNicknameResponse>((resolve, reject) => {
+      fetch(`${this.baseUrl}/users/${id}/profile`, {
+        method: 'put',
+        body: JSON.stringify(publishTemplate),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res: any) => {
+          res.status === 200
+            ? resolve(res.json() as UpdateNicknameResponse)
             : reject(res.json() as ErrorResponse)
         })
         .catch((error: any) => reject(error))
