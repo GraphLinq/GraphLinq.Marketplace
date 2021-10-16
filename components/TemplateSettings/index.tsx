@@ -120,7 +120,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
       const result = await TemplateService.publishTemplate({
         name: props.title,
         description: props.description,
-        category: Number(props.category),
+        category_id: Number(props.category),
         price: Number(props.price),
         data: data,
         youtube: props.youtubeLink,

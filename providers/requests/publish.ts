@@ -1,7 +1,7 @@
 export default interface PublishRequest {
   name: string
   description: string
-  category: number
+  category_id: number
   price: number
   data: string
   youtube?: string
