@@ -9,6 +9,7 @@ import GraphService from 'services/graphService'
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const TemplatePage: React.FC = ({}) => {
+  //@todo get template data to edit
   //const router = useRouter()
   //const { templateId } = router.query
   /* const { data, error } = useSWR(
@@ -49,6 +50,14 @@ const TemplatePage: React.FC = ({}) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [compressedTemplate])
+
+  useEffect(() => {
+    setPrice(data[0].price.price)
+    setTitle(data[0].title)
+    setCategory(data[0].category.id)
+    setDescription(data[0].description)
+    setYoutubeLink(data[0].youtubeLink)
+  }, [data])
 
   if (error) return <>An error has occurred.</>
   if (!data) return <>Loading...</>

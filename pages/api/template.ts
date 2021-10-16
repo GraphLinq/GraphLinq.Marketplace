@@ -4,6 +4,7 @@ const thumbnail = '/images/thumbnail_small.png'
 const templateMockData = {
   templateId: 0,
   templateThumbnail: thumbnail,
+  youtubeLink: 'https://www.youtube.com/embed/fuwFbM408Ys',
   images: [
     {
       imageUrl: 'https://www.youtube.com/embed/fuwFbM408Ys',

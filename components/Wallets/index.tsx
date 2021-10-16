@@ -100,7 +100,8 @@ export const Wallets: React.FC = ({}) => {
           })
         })
     }
-  }, [account, library, toast])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account, library])
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     let name = ''

@@ -10,6 +10,7 @@ import {
   Input,
 } from '@chakra-ui/react'
 import GraphService from 'services/graphService'
+import TemplateService from 'services/templateService'
 
 export interface TemplateRoot {
   name: string
@@ -103,8 +104,8 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
     return compData
   }
 
-  async function publishTemplate() {
-    compressGraph(JSON.stringify(templateData)).then((data) => {
+  async function publish() {
+    compressGraph(JSON.stringify(templateData)).then(async (data) => {
       //@todo call API on publish endpoint
       console.log({
         name: props.title,
@@ -115,6 +116,22 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
         youtube: props.youtubeLink,
         images: props.fileImagesUpload.files,
       })
+
+      const result = await TemplateService.publishTemplate({
+        name: props.title,
+        description: props.description,
+        category: Number(props.category),
+        price: Number(props.price),
+        data: data,
+        youtube: props.youtubeLink,
+        images: props.fileImagesUpload.files,
+      })
+
+      if (result) {
+        console.log('template published')
+      } else {
+        console.log(result)
+      }
     })
   }
 
@@ -165,7 +182,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
         >
           Go Back
         </Button>
-        <Button w="50%" size="lg" ml={1} onClick={publishTemplate}>
+        <Button w="50%" size="lg" ml={1} onClick={publish}>
           Publish Template
         </Button>
       </Flex>
