@@ -9,19 +9,43 @@ import {
   Textarea,
   Flex,
   Button,
+  InputGroup,
+  InputRightAddon,
 } from '@chakra-ui/react'
 import { useState } from 'react'
+import OfferService from 'services/offerService'
 
 const CreateOffer: NextPage = () => {
-  const [offerTitle, setOfferTitle] = useState<string>()
-  const [offerDescription, setOfferDescription] = useState<string>()
+  const [offerTitle, setOfferTitle] = useState<string>('')
+  const [offerContact, setOfferContact] = useState<string>('')
+  const [offerBudget, setOfferBudget] = useState<number>(0)
+  const [offerDescription, setOfferDescription] = useState<string>('')
 
   const handleOfferTitleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setOfferTitle(event.target.value)
 
+  const handleContactChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setOfferContact(event.target.value)
+
+  const handleBudgetChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setOfferBudget(Number(event.target.value))
+
   const handleOfferDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => setOfferDescription(event.target.value)
+
+  const submitOffer = async () => {
+    const result = await OfferService.submitOffer({
+      title: offerTitle,
+      budget: offerBudget,
+      email: offerContact,
+      description: offerDescription,
+    })
+    if (result) {
+      /* @todo visual feedback + redirection */
+      console.log('offer submited')
+    }
+  }
 
   return (
     <Container
@@ -43,6 +67,27 @@ const CreateOffer: NextPage = () => {
             onChange={handleOfferTitleChange}
           />
         </FormControl>
+        <FormControl id="offer-budget" isRequired>
+          <FormLabel>Budget</FormLabel>
+          <InputGroup>
+            <Input
+              type="number"
+              placeholder="Budget in GLQ"
+              value={offerBudget}
+              onChange={handleBudgetChange}
+            />
+            <InputRightAddon>GLQ</InputRightAddon>
+          </InputGroup>
+        </FormControl>
+        <FormControl id="offer-title" isRequired>
+          <FormLabel>Contact e-mail</FormLabel>
+          <Input
+            type="text"
+            placeholder="Contact e-mail"
+            value={offerContact}
+            onChange={handleContactChange}
+          />
+        </FormControl>
         <FormControl id="offer-description" isRequired>
           <FormLabel>Description</FormLabel>
           <Input
@@ -55,7 +100,7 @@ const CreateOffer: NextPage = () => {
           />
         </FormControl>
         <Flex justifyContent="center">
-          <Button w="full" size="lg">
+          <Button w="full" size="lg" onClick={submitOffer}>
             Post Offer
           </Button>
         </Flex>

@@ -1,19 +1,15 @@
 import React from 'react'
 import { Container, Stack, Heading, StackDivider } from '@chakra-ui/react'
-//import { useRouter } from 'next/router'
 import useSWR from 'swr'
-import { OfferCard } from '@/components/OfferCard'
+import { OfferCard, OfferCardProps } from '@/components/OfferCard'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const OfferPage: React.FC = ({}) => {
-  //const router = useRouter()
-  //const { templateId } = router.query
-  /* const { data, error } = useSWR(
-    `http://127.0.0.1.4561/templates/${templateId}`,
+  const { data, error } = useSWR(
+    `http://127.0.0.1:4561/offers/?page=1&limit=5`,
     fetcher
-  ) */
-  const { data, error } = useSWR(`/api/offer`, fetcher)
+  )
 
   if (error) return <>An error has occurred.</>
   if (!data) return <>Loading...</>
@@ -33,8 +29,8 @@ const OfferPage: React.FC = ({}) => {
         align="stretch"
         divider={<StackDivider borderColor="brand.200" />}
       >
-        {data.map((offer: OfferCard, i: number) => {
-          return <OfferCard key={`offer-card-${i}`} data={offer} />
+        {data.results.map((offer: OfferCardProps, i: number) => {
+          return <OfferCard key={`offer-card-${i}`} {...offer} />
         })}
       </Stack>
     </Container>

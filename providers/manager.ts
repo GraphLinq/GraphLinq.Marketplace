@@ -9,6 +9,8 @@ import PublishResponse from './responses/publish'
 import PublishRequest from './requests/publish'
 import UpdateNicknameRequest from './requests/user'
 import UpdateNicknameResponse from './responses/user'
+import SubmitOfferRequest from './requests/offer'
+import { SubmitOfferResponse } from './responses/offer'
 
 export default class ManagerProvider {
   public static baseUrl: string =
@@ -115,6 +117,27 @@ export default class ManagerProvider {
         .then((res: any) => {
           res.status === 200
             ? resolve(res.json() as UpdateNicknameResponse)
+            : reject(res.json() as ErrorResponse)
+        })
+        .catch((error: any) => reject(error))
+    })
+  }
+  public static submitOffer(
+    publishTemplate: SubmitOfferRequest,
+    token: string
+  ): Promise<SubmitOfferResponse> {
+    return new Promise<SubmitOfferResponse>((resolve, reject) => {
+      fetch(`${this.baseUrl}/offers`, {
+        method: 'post',
+        body: JSON.stringify(publishTemplate),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res: any) => {
+          res.status === 200
+            ? resolve(res.json() as SubmitOfferResponse)
             : reject(res.json() as ErrorResponse)
         })
         .catch((error: any) => reject(error))

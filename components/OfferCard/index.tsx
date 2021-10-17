@@ -2,25 +2,31 @@ import React from 'react'
 import { Flex, Text, Heading, Box, Button } from '@chakra-ui/react'
 import NextLink from 'next/link'
 
-export interface OfferCard {
-  offerId: number
-  offerTitle: string
-  offerDescription: string
-  offerAuthorId: number
-  offerPrice: number
+export interface OfferCardProps {
+  id: number
+  title: string
+  description: string
+  email: string
+  budget: number
+  user: User
 }
 
-interface OfferCardProps {
-  data: OfferCard
+interface User {
+  id: number
+  name: string
+  email: string
+  publisherName: string
+  publicAddress: string
+  is_admin: boolean
 }
 
-export const OfferCard: React.FC<OfferCardProps> = ({ data }) => {
+export const OfferCard: React.FC<OfferCardProps> = (props) => {
   return (
     <Flex flexDir="row" h="full" alignItems="center">
-      <Box h="auto" maxW="full">
-        <Heading size="md">{data.offerTitle}</Heading>
+      <Box h="auto" maxW="full" w="full">
+        <Heading size="md">{props.title}</Heading>
         <Text noOfLines={3} mt={2}>
-          {data.offerDescription}
+          {props.description}
         </Text>
       </Box>
       <Flex
@@ -32,8 +38,8 @@ export const OfferCard: React.FC<OfferCardProps> = ({ data }) => {
         justifyItems="self-start"
       >
         <Text>Offering:</Text>
-        <Text fontWeight="semibold">{data.offerPrice} GLQ</Text>
-        <NextLink href={`/offers/${data.offerId}`}>
+        <Text fontWeight="semibold">{props.budget} GLQ</Text>
+        <NextLink href={`/offers/${props.id}`}>
           <Button mt={2} size="md">
             View Details
           </Button>
