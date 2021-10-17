@@ -9,7 +9,7 @@ import {
   Text,
   chakra,
 } from '@chakra-ui/react'
-//import { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { FaCog } from 'react-icons/fa'
 import NextLink from 'next/link'
@@ -17,13 +17,12 @@ import NextLink from 'next/link'
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const OfferPage: React.FC = ({}) => {
-  //const router = useRouter()
-  //const { templateId } = router.query
-  /* const { data, error } = useSWR(
-    `http://127.0.0.1.4561/templates/${templateId}`,
-    fetcher
-  ) */
-  const { data, error } = useSWR(`/api/offer`, fetcher)
+  const router = useRouter()
+  const { id } = router.query
+  const { data, error } = useSWR(
+    id ? `http://127.0.0.1:4561/offers/${id}` : null,
+    id ? fetcher : null
+  )
 
   if (error) return <>An error has occurred.</>
   if (!data) return <>Loading...</>
@@ -37,28 +36,28 @@ const OfferPage: React.FC = ({}) => {
       <Flex justifyContent="space-between">
         <Box>
           <Heading size="xl" color="white">
-            {data[0].offerTitle}
+            {data.results.title}
           </Heading>
           <Text>
             Offering :{' '}
             <chakra.span fontWeight="semibold">
-              {data[0].offerPrice} GLQ
+              {data.results.budget} GLQ
             </chakra.span>
           </Text>
         </Box>
         <Box>
-          <NextLink href="">
+          <NextLink href={`mailto:${data.results.email}`}>
             <Button size="md">Contact</Button>
           </NextLink>
           {/* button edit owner only */}
-          <NextLink href={`/offers/edit?id=${data[0].offerId}`}>
+          <NextLink href={`/offers/edit?id=${data.results.id}`}>
             <Button ml={2} size="md" leftIcon={<Icon as={FaCog} />}>
               Edit
             </Button>
           </NextLink>
         </Box>
       </Flex>
-      <Box py={4}>{data[0].offerDescription}</Box>
+      <Box py={4}>{data.results.description}</Box>
     </Container>
   )
 }
