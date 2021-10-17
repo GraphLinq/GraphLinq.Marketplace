@@ -12,6 +12,8 @@ import {
 import DOMPurify from 'isomorphic-dompurify'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { Templates } from 'pages'
+import NextLink from 'next/link'
+import { shortenAddress } from 'utils'
 
 export const TemplateDetails: React.FC<Templates> = (props) => {
   const safeDescription = DOMPurify.sanitize(props.description, {
@@ -94,20 +96,19 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Link
-                  href="#author"
-                  color="text.200"
-                  _hover={{ color: 'primary.100' }}
-                >
-                  <Text fontSize="sm" casing="uppercase" isTruncated>
-                    {props.user.name}
-                  </Text>
-                </Link>
+                <NextLink href={`/users/${props.user?.id}`}>
+                  <Link color="text.200" _hover={{ color: 'primary.100' }}>
+                    <Text fontSize="sm" casing="uppercase" isTruncated>
+                      {props.user?.name ||
+                        shortenAddress(props.user?.publicAddress || '')}
+                    </Text>
+                  </Link>
+                </NextLink>
                 {/* <Rating {...props.data} /> */}
               </Flex>
             </Box>
             <Text fontSize={['xl', '2xl']} fontWeight="bold">
-              250 GLQ
+              {props.template_cost} GLQ
             </Text>
             <VStack spacing={3} align="stretch" mt="20px">
               {/* <Flex justifyContent="space-between">

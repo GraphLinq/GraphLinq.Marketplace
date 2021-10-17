@@ -127,6 +127,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
         images: props.fileImagesUpload.files,
       })
 
+      /* @todo visual feedback for user + redirection */
       if (result) {
         console.log('template published')
       } else {

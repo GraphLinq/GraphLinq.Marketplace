@@ -19,7 +19,7 @@ import TemplateCard from '@/components/TemplateCard'
 import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
-const PAGE_SIZE = 6
+const PAGE_SIZE = 24
 
 export interface Templates {
   id: number
@@ -28,7 +28,7 @@ export interface Templates {
   youtube: string
   template_cost: number
   category: Category
-  user: User
+  user?: User
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   likes: any[]
   images: string[]
@@ -47,6 +47,7 @@ interface User {
   name: string
   email: string
   publisherName: string
+  publicAddress: string
   is_admin: boolean
 }
 
@@ -201,7 +202,7 @@ const Home: NextPage = () => {
           pt="2rem"
         >
           {data.results.map((t: Templates, i: number) => {
-            return <TemplateCard key={`${t.id}-${i}`} {...t} />
+            return <TemplateCard key={`${t.id}-${i}`} template={t} />
           })}
         </Flex>
         <Button w="full" variant="outline" rounded="full">

@@ -11,8 +11,24 @@ import {
 import MotionLink from '@/components/MotionLink'
 import { TemplateModal } from './TemplateModal'
 import { Templates } from 'pages'
+import NextLink from 'next/link'
+import { shortenAddress } from 'utils'
 
-const TemplateCard: React.FC<Templates> = (props) => {
+interface TemplateCardProps {
+  user?: User
+  template: Templates
+}
+
+interface User {
+  id: number
+  name: string
+  email: string
+  publisherName: string
+  publicAddress?: string
+  is_admin: boolean
+}
+
+const TemplateCard: React.FC<TemplateCardProps> = (props) => {
   //const isFavorite = false
 
   return (
@@ -22,13 +38,7 @@ const TemplateCard: React.FC<Templates> = (props) => {
       px="8px"
       mb="3rem"
     >
-      <MotionLink
-        href="#template"
-        role="group"
-        initial="rest"
-        whileHover="hover"
-        animate="rest"
-      >
+      <MotionLink role="group" initial="rest" whileHover="hover" animate="rest">
         <Box position="relative" w="100%">
           <AspectRatio ratio={3 / 2}>
             <Box
@@ -40,7 +50,7 @@ const TemplateCard: React.FC<Templates> = (props) => {
               rounded="base"
             >
               <Box
-                //bgImage={`url("${props.images[0]}")`}
+                //bgImage={`url("${props.template.images[0]}")`}
                 bgImage={`url("/images/thumbnail_small.png")`}
                 bgSize="100% 100%"
                 bgPos="center top"
@@ -68,35 +78,42 @@ const TemplateCard: React.FC<Templates> = (props) => {
               />
             )}
           </Box> */}
-          <TemplateModal {...props} />
+          <TemplateModal
+            template={props.template}
+            user={{
+              id: props.user?.id,
+              name: props.user?.name,
+              ...props.user,
+            }}
+          />
         </Box>
       </MotionLink>
       <Flex direction="column" w="full">
-        <Link
-          href="#author"
-          color="text.200"
-          _hover={{ color: 'primary.100' }}
-          mt="0.5rem"
-        >
-          <Text fontSize="xs" casing="uppercase" isTruncated>
-            {props.user.name}
-          </Text>
-        </Link>
+        <NextLink href={`/users/${props.template.user?.id || props.user?.id}`}>
+          <Link color="text.200" _hover={{ color: 'primary.100' }} mt="0.5rem">
+            <Text fontSize="xs" casing="uppercase" isTruncated>
+              {props.template.user?.name ||
+                shortenAddress(props.template.user?.publicAddress || '') ||
+                props.user?.name ||
+                shortenAddress(props.user?.publicAddress || '')}
+            </Text>
+          </Link>
+        </NextLink>
         <LinkBox>
-          <LinkOverlay href="#page">
+          <LinkOverlay href={`/templates/${props.template.id}`}>
             <Text
               fontSize="lg"
               casing="capitalize"
               lineHeight="normal"
               isTruncated
             >
-              {props.name}
+              {props.template.name}
             </Text>
           </LinkOverlay>
           {/* <Rating {...props} /> */}
           <Text fontSize="md">
-            {/* {props.price.isFree ? 'FREE' : props.price.price + ' GLQ'} */}
-            {props.template_cost + ' GLQ'}
+            {/* {props.template.price.isFree ? 'FREE' : props.template.price.price + ' GLQ'} */}
+            {props.template.template_cost + ' GLQ'}
           </Text>
         </LinkBox>
       </Flex>

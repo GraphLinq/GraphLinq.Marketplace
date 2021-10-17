@@ -58,6 +58,8 @@ export const DropdownMenu: React.FC = () => {
   const userAvatar = ''
   const { hasCopied, onCopy } = useClipboard(account || '')
 
+  if (error) return <Text>An error has occurred.</Text>
+  if (!data) return <Text>Loading...</Text>
   return (
     <Menu autoSelect={false} isLazy>
       <MenuButton
@@ -128,7 +130,7 @@ export const DropdownMenu: React.FC = () => {
         </MenuGroup>
         <MenuDivider />
         <MenuGroup>
-          <NextLink href="/account/profile">
+          <NextLink href={`/users/${session.account_id}`}>
             <MenuItem icon={<Icon as={HiOutlineUser} boxSize={4} />}>
               My Profile
             </MenuItem>

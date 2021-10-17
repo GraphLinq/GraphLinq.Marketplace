@@ -16,27 +16,29 @@ import {
 import { UserAvatar } from '@/components/UserAvatar'
 import { useWeb3React } from '@web3-react/core'
 import { shortenAddress } from 'utils'
-import TemplateCard from '@/components/TemplateCard'
 import useSWR from 'swr'
+import UserTemplates from '@/components/UserTemplates'
+import { useRouter } from 'next/router'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
-const userFetcher = (url: string) => fetch(url).then((res) => res.json())
 
-const Profile: NextPage = () => {
+const UserProfile: NextPage = () => {
   const { account } = useWeb3React()
   const { onCopy } = useClipboard(account || '')
-  const { data, error } = useSWR('/api/template', fetcher)
+  const router = useRouter()
+  const { id } = router.query
 
-  const session = JSON.parse(localStorage.getItem('session') as string)
-  const { data: user } = useSWR(
-    `${process.env.NEXT_PUBLIC_MANAGER_URL}/users/${session.account_id}`,
-    userFetcher
+  const { data, error } = useSWR(
+    id ? `${process.env.NEXT_PUBLIC_MANAGER_URL}/users/${id}` : null,
+    id ? fetcher : null
   )
 
   const userBanner =
     'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
 
-  if (error) return <Text>Failure: Can&apos;t reach API</Text>
+  if (error) return <Text>An error has occurred.</Text>
+  if (!data) return <Text>Loading...</Text>
+  console.log(data)
   return (
     <>
       <Flex
@@ -55,7 +57,7 @@ const Profile: NextPage = () => {
           position="absolute"
           boxSize="128px"
         >
-          <UserAvatar name={user?.name || account} src="" />
+          <UserAvatar name={''} src="" />
         </Flex>
       </Flex>
       <Container
@@ -63,11 +65,13 @@ const Profile: NextPage = () => {
         mt="4rem"
       >
         <VStack spacing={1} align="center">
-          <Text as="span" fontSize="3xl" fontWeight="600" color="text.50">
-            {user?.name || account}
-          </Text>
+          {data && (
+            <Text as="span" fontSize="3xl" fontWeight="600" color="text.50">
+              {data.name || data.id}
+            </Text>
+          )}
           <Button onClick={onCopy} variant="outline" size="md" rounded="full">
-            {shortenAddress(account || '')}
+            {shortenAddress(data.id)}
           </Button>
         </VStack>
         <Tabs size="lg" mt="3.5rem">
@@ -86,43 +90,28 @@ const Profile: NextPage = () => {
             >
               My Purchased Templates
             </Tab>
-            <Tab
+            {/* <Tab
               fontWeight="500"
               color="text.200"
               _selected={{ color: 'text.50', borderColor: 'text.100' }}
             >
               Favorites
-            </Tab>
+            </Tab> */}
           </TabList>
           <TabPanels>
             <TabPanel>
-              <Flex
-                flexDir="row"
-                wrap="wrap"
-                flex="0 1 auto"
-                justifyContent="start"
-                pt="2rem"
-              >
-                {!data
-                  ? 'loading...'
-                  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    data.map((t: any, i: number) => {
-                      return (
-                        <TemplateCard key={`${t.templateId}-${i}`} {...t} />
-                      )
-                    })}
-              </Flex>
+              <UserTemplates userId={Number(id)} />
             </TabPanel>
             <TabPanel>
               <Heading size="lg" py={12}>
                 No items found
               </Heading>
             </TabPanel>
-            <TabPanel>
+            {/* <TabPanel>
               <Heading size="lg" py={12}>
                 No items found
               </Heading>
-            </TabPanel>
+            </TabPanel> */}
           </TabPanels>
         </Tabs>
       </Container>
@@ -130,4 +119,4 @@ const Profile: NextPage = () => {
   )
 }
 
-export default Profile
+export default UserProfile

@@ -23,14 +23,26 @@ import DOMPurify from 'isomorphic-dompurify'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { Templates } from 'pages'
 import NextLink from 'next/link'
-/* interface TemplateModalProps {
+import { shortenAddress } from 'utils'
 
-} */
+interface TemplateModalProps {
+  user?: User
+  template: Templates
+}
 
-export const TemplateModal: React.FC<Templates> = (props) => {
+interface User {
+  id?: number
+  name?: string
+  email?: string
+  publisherName?: string
+  publicAddress?: string
+  is_admin?: boolean
+}
+
+export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const safeDescription = DOMPurify.sanitize(props.description, {
+  const safeDescription = DOMPurify.sanitize(props.template.description, {
     FORBID_TAGS: ['style', 'script', 'img'],
   })
 
@@ -115,7 +127,7 @@ export const TemplateModal: React.FC<Templates> = (props) => {
           bgColor="brand.500"
           height={{ md: 'auto', base: '100vh' }}
         >
-          {/* <ModalHeader bgColor="brand.600" borderTopRadius="md">{props.title}</ModalHeader> */}
+          {/* <ModalHeader bgColor="brand.600" borderTopRadius="md">{props.template.title}</ModalHeader> */}
           <ModalCloseButton color="text.300" />
           <ModalBody p="30px" display="flex" flexDir="column">
             <Flex flexDir="row" flexWrap="wrap" justifyContent="space-between">
@@ -130,7 +142,7 @@ export const TemplateModal: React.FC<Templates> = (props) => {
                   renderItem={customRenderItem}
                   showStatus={false}
                 >
-                  {props.images.map((image, i) => (
+                  {props.template.images.map((image, i) => (
                     <CarouselSlide
                       type={image.type}
                       key={`slide-${i}`}
@@ -147,20 +159,28 @@ export const TemplateModal: React.FC<Templates> = (props) => {
               >
                 <Box w="full">
                   <Box>
-                    <Heading size="md">{props.name}</Heading>
+                    <Heading size="md">{props.template.name}</Heading>
                     <Flex
                       my="12px"
                       justifyContent="space-between"
                       alignItems="center"
                     >
-                      {/* @todo direct to user profile */}
-                      <NextLink href={`/users/${props.user.id}`}>
+                      <NextLink
+                        href={`/users/${
+                          props.template.user?.id || props.user?.id
+                        }`}
+                      >
                         <Link
                           color="text.200"
                           _hover={{ color: 'primary.100' }}
                         >
                           <Text fontSize="sm" casing="uppercase" isTruncated>
-                            {props.user.name}
+                            {props.template.user?.name ||
+                              shortenAddress(
+                                props.template.user?.publicAddress || ''
+                              ) ||
+                              props.user?.name ||
+                              shortenAddress(props.user?.publicAddress || '')}
                           </Text>
                         </Link>
                       </NextLink>
@@ -168,7 +188,7 @@ export const TemplateModal: React.FC<Templates> = (props) => {
                     </Flex>
                   </Box>
                   <Box fontSize="2xl" fontWeight="bold">
-                    {props.template_cost} GLQ
+                    {props.template.template_cost} GLQ
                   </Box>
                   <VStack spacing={3} align="stretch" mt="20px">
                     {/* <Flex justifyContent="space-between">
@@ -187,7 +207,9 @@ export const TemplateModal: React.FC<Templates> = (props) => {
                       <Text color="text.100" fontWeight="500">
                         Latest version
                       </Text>
-                      <Text>{props.versions.at(-1)?.current_version}</Text>
+                      <Text>
+                        {props.template.versions.at(-1)?.current_version}
+                      </Text>
                     </Flex>
                     <Flex justifyContent="space-between">
                       <Text color="text.100" fontWeight="500">
@@ -198,7 +220,9 @@ export const TemplateModal: React.FC<Templates> = (props) => {
                         {new Intl.DateTimeFormat('en-GB', {
                           dateStyle: 'long',
                         }).format(
-                          Date.parse(props.versions.at(-1)?.updatedAt || '')
+                          Date.parse(
+                            props.template.versions.at(-1)?.updatedAt || ''
+                          )
                         )}
                       </Text>
                     </Flex>
@@ -221,7 +245,7 @@ export const TemplateModal: React.FC<Templates> = (props) => {
                 Buy Template
               </Button>
             </NextLink>
-            <NextLink href={`/templates/${props.id}`}>
+            <NextLink href={`/templates/${props.template.id}`}>
               <Button size="lg" rounded="lg" variant="outline">
                 View Full Details
               </Button>
