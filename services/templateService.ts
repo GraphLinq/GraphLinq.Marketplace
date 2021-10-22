@@ -5,14 +5,15 @@ import PublishResponse from 'providers/responses/publish'
 export default class TemplateService {
   public static async publishTemplate(
     template: PublishRequest
-  ): Promise<boolean> {
+  ): Promise<PublishResponse> {
     try {
       const session = JSON.parse(localStorage.getItem('session') as string)
       const result: PublishResponse = await ManagerProvider.publishTemplate(
         template,
         session.token
       )
-      return result.success
+      console.log(result)
+      return result
     } catch (error) {
       console.error(error)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

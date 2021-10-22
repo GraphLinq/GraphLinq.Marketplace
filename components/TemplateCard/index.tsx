@@ -13,6 +13,8 @@ import { TemplateModal } from './TemplateModal'
 import { Templates } from 'pages'
 import NextLink from 'next/link'
 import { shortenAddress } from 'utils'
+import { useTemplatePrice } from 'hooks/wallet'
+import { formatUnits } from '@ethersproject/units'
 
 interface TemplateCardProps {
   user?: User
@@ -30,6 +32,9 @@ interface User {
 
 const TemplateCard: React.FC<TemplateCardProps> = (props) => {
   //const isFavorite = false
+
+  const price = useTemplatePrice(props.template.id)
+  const templatePrice = formatUnits(price)
 
   return (
     <Box
@@ -113,7 +118,8 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
           {/* <Rating {...props} /> */}
           <Text fontSize="md">
             {/* {props.template.price.isFree ? 'FREE' : props.template.price.price + ' GLQ'} */}
-            {props.template.template_cost + ' GLQ'}
+            {/* {props.template.template_cost + ' GLQ'} */}
+            {templatePrice} GLQ
           </Text>
         </LinkBox>
       </Flex>

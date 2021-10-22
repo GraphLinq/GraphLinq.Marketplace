@@ -2,7 +2,6 @@ import React from 'react'
 import {
   Heading,
   Stack,
-  SimpleGrid,
   Text,
   Button,
   Flex,
@@ -16,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { createRef, useState } from 'react'
 import { ALL_CATEGORY_IDS, CATEGORY_INFO } from 'constants/template'
-import ImagePreview from '../ImagePreview'
+//import ImagePreview from '../ImagePreview'
 
 interface TemplateUploadProps {
   setStep: {
@@ -57,7 +56,7 @@ interface TemplateUploadProps {
 
 export const TemplateUpload: React.FC<TemplateUploadProps> = (props) => {
   const inputFileRef = createRef<HTMLInputElement>()
-  const inputFileImagesRef = createRef<HTMLInputElement>()
+  //const inputFileImagesRef = createRef<HTMLInputElement>()
   const [error, setError] = useState('')
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -73,21 +72,21 @@ export const TemplateUpload: React.FC<TemplateUploadProps> = (props) => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => props.setDescription(event.target.value)
 
-  const handleYoutubeLinkChange = (
+  /* const handleYoutubeLinkChange = (
     event: React.ChangeEvent<HTMLInputElement>
-  ) => props.setTitle(event.target.value)
+  ) => props.setTitle(event.target.value) */
 
   function onInputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     const element = event.target as HTMLInputElement
     element.value = ''
   }
 
-  function onInputImageClick(
+  /* function onInputImageClick(
     event: React.MouseEvent<HTMLInputElement, MouseEvent>
   ) {
     const element = event.target as HTMLInputElement
     element.value = ''
-  }
+  } */
 
   async function onGlqFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
@@ -100,7 +99,7 @@ export const TemplateUpload: React.FC<TemplateUploadProps> = (props) => {
     }
   }
 
-  async function onImageFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  /* async function onImageFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const files = Array.from(e.currentTarget.files!)
 
@@ -119,7 +118,7 @@ export const TemplateUpload: React.FC<TemplateUploadProps> = (props) => {
       loaded: true,
       files: [],
     })
-  }
+  } */
 
   function nextStep() {
     if (
@@ -222,7 +221,7 @@ export const TemplateUpload: React.FC<TemplateUploadProps> = (props) => {
           onChange={handleDescriptionChange}
         />
       </FormControl>
-      <FormControl id="template-youtube">
+      {/* <FormControl id="template-youtube">
         <FormLabel>Youtube Embed Link</FormLabel>
         <Input
           type="text"
@@ -273,7 +272,7 @@ export const TemplateUpload: React.FC<TemplateUploadProps> = (props) => {
         >
           {props.fileImagesUpload.loaded ? 'Add Images' : 'Upload Images'}
         </Button>
-      </FormControl>
+      </FormControl> */}
       {!!error && <Text color="red.400">{error}</Text>}
       <Flex justifyContent="center">
         <Button w="full" size="lg" onClick={nextStep}>

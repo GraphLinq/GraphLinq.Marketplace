@@ -16,6 +16,7 @@ import {
   Image,
   Link,
   useClipboard,
+  Spinner,
 } from '@chakra-ui/react'
 import {
   HiOutlineUser,
@@ -38,7 +39,7 @@ const userFetcher = (url: string) => fetch(url).then((res) => res.json())
 export const DropdownMenu: React.FC = () => {
   const { account, library } = useWeb3React()
 
-  const trueBalance = useGlqBalance(account || '', library)
+  const trueBalance = useGlqBalance(library)
   const balance = Math.floor(Number(formatEther(trueBalance)))
   const { data, error } = useSWR(
     `${process.env.NEXT_PUBLIC_PROXY_API_URL}/706364f99ee8354232b99bc8060fe59b0442986c1e5b147900e825f905080245/glq`,
@@ -59,7 +60,7 @@ export const DropdownMenu: React.FC = () => {
   const { hasCopied, onCopy } = useClipboard(account || '')
 
   if (error) return <Text>An error has occurred.</Text>
-  if (!data) return <Text>Loading...</Text>
+  if (!data) return <Spinner size="md" color="gray.300" emptyColor="gray.500" />
   return (
     <Menu autoSelect={false} isLazy>
       <MenuButton

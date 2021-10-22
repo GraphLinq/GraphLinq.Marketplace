@@ -16,6 +16,7 @@ import {
   VStack,
   Link,
   useBreakpointValue,
+  createStandaloneToast,
 } from '@chakra-ui/react'
 import { HiEye } from 'react-icons/hi'
 import MotionBox from '@/components/MotionBox'
@@ -24,6 +25,12 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { Templates } from 'pages'
 import NextLink from 'next/link'
 import { shortenAddress } from 'utils'
+import { useTemplateAccess, useTemplatePrice } from 'hooks/wallet'
+import useContract from 'hooks/useContract'
+import MARKETPLACEABI from 'abis/marketplace.json'
+import ERC20ABI from 'abis/erc20.json'
+import { useWeb3React } from '@web3-react/core'
+import { formatUnits, parseEther } from 'ethers/lib/utils'
 
 interface TemplateModalProps {
   user?: User
@@ -45,6 +52,108 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
   const safeDescription = DOMPurify.sanitize(props.template.description, {
     FORBID_TAGS: ['style', 'script', 'img'],
   })
+
+  const price = useTemplatePrice(props.template.id)
+  const templatePrice = formatUnits(price)
+
+  const toast = createStandaloneToast()
+
+  const { account } = useWeb3React()
+
+  const access = useTemplateAccess(props.template.id)
+
+  const contractToken = useContract(
+    process.env.NEXT_PUBLIC_GRAPHLINQ_TOKEN_CONTRACT || '',
+    ERC20ABI
+  )
+  const contractMarketplace = useContract(
+    process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT || '',
+    MARKETPLACEABI
+  )
+
+  const buyTemplate = async () => {
+    if (contractToken != null && contractMarketplace != null) {
+      try {
+        await contractToken.allowance(
+          account,
+          process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT
+        )
+        //BigNumber.from(templatePrice)
+        const wei = parseEther(templatePrice.toString())
+        console.log(wei)
+        toast({
+          title: 'Allowance pending',
+          description:
+            'Please allow the use of your token balance for the contract...',
+          position: 'bottom-right',
+          status: 'info',
+          duration: null,
+          isClosable: true,
+        })
+        const approveTx = await contractToken.approve(
+          process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT,
+          wei.toString()
+        )
+        toast({
+          title: 'Pending',
+          description: 'Waiting for confirmations ...',
+          position: 'bottom-right',
+          status: 'info',
+          duration: null,
+          isClosable: true,
+        })
+        await approveTx.wait()
+        toast.closeAll()
+        toast({
+          title: 'Success',
+          description: 'Contract Approved',
+          position: 'bottom-right',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        const buyTx = await contractMarketplace.buyTemplate(props.template.id)
+        toast({
+          title: 'Pending',
+          description: 'Waiting for confirmations ...',
+          position: 'bottom-right',
+          status: 'info',
+          duration: null,
+          isClosable: true,
+        })
+        const buyTxReceipt = await buyTx.wait()
+        toast.closeAll()
+        toast({
+          title: 'Template Purchased',
+          description: (
+            <a
+              href={`https://etherscan.io/tx/${buyTxReceipt.transactionHash}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View on etherscan
+            </a>
+          ),
+          position: 'bottom-right',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
+        console.log(access)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        console.log(e && e.message ? e.message : '')
+        toast({
+          title: 'Error',
+          description: e && e.message ? `\n\n${e.message}` : '',
+          position: 'bottom-right',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      }
+    }
+  }
 
   /*const YoutubeSlide = ({
     url,
@@ -188,7 +297,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                     </Flex>
                   </Box>
                   <Box fontSize="2xl" fontWeight="bold">
-                    {props.template.template_cost} GLQ
+                    {templatePrice} GLQ
                   </Box>
                   <VStack spacing={3} align="stretch" mt="20px">
                     {/* <Flex justifyContent="space-between">
@@ -239,12 +348,18 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
             ></Flex>
           </ModalBody>
           <ModalFooter>
-            {/* @todo handle buy */}
-            <NextLink href="#buy">
-              <Button size="lg" rounded="lg" mr="0.5rem">
+            {/* @todo handle download */}
+            {access ? (
+              <NextLink href="#buy">
+                <Button size="lg" rounded="lg" mr="0.5rem">
+                  Download
+                </Button>
+              </NextLink>
+            ) : (
+              <Button size="lg" rounded="lg" mr="0.5rem" onClick={buyTemplate}>
                 Buy Template
               </Button>
-            </NextLink>
+            )}
             <NextLink href={`/templates/${props.template.id}`}>
               <Button size="lg" rounded="lg" variant="outline">
                 View Full Details

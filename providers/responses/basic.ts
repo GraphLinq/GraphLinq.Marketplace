@@ -1,6 +1,5 @@
-export default interface PublishResponse {
+export default interface BasicResponse {
   success: boolean
-  templateId: number
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   errors?: any
 }

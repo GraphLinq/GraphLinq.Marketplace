@@ -13,6 +13,9 @@ import {
   Icon,
   useBreakpointValue,
   Spacer,
+  Spinner,
+  Center,
+  Text,
 } from '@chakra-ui/react'
 import { HiOutlineAdjustments } from 'react-icons/hi'
 import TemplateCard from '@/components/TemplateCard'
@@ -71,7 +74,17 @@ const Home: NextPage = () => {
   )
 
   if (error) return <>An error has occurred.</>
-  if (!data) return <>Loading...</>
+  if (!data)
+    return (
+      <Center w="full" h={96} alignContent="center">
+        <Spinner
+          thickness="4px"
+          size="lg"
+          color="gray.300"
+          emptyColor="gray.500"
+        />
+      </Center>
+    )
   return (
     <>
       <Container
@@ -201,9 +214,13 @@ const Home: NextPage = () => {
           justifyContent="start"
           pt="2rem"
         >
-          {data.results.map((t: Templates, i: number) => {
-            return <TemplateCard key={`${t.id}-${i}`} template={t} />
-          })}
+          {data != [] ? (
+            data.results.map((t: Templates, i: number) => {
+              return <TemplateCard key={`${t.id}-${i}`} template={t} />
+            })
+          ) : (
+            <Text>No templates</Text>
+          )}
         </Flex>
         <Button w="full" variant="outline" rounded="full">
           Load more

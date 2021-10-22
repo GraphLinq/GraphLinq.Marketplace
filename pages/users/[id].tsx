@@ -12,6 +12,8 @@ import {
   Heading,
   Button,
   useClipboard,
+  Center,
+  Spinner,
 } from '@chakra-ui/react'
 import { UserAvatar } from '@/components/UserAvatar'
 import { useWeb3React } from '@web3-react/core'
@@ -37,8 +39,17 @@ const UserProfile: NextPage = () => {
     'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
 
   if (error) return <Text>An error has occurred.</Text>
-  if (!data) return <Text>Loading...</Text>
-  console.log(data)
+  if (!data)
+    return (
+      <Center w="full" h={96} alignContent="center">
+        <Spinner
+          thickness="4px"
+          size="lg"
+          color="gray.300"
+          emptyColor="gray.500"
+        />
+      </Center>
+    )
   return (
     <>
       <Flex

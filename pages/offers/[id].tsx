@@ -8,6 +8,8 @@ import {
   Box,
   Text,
   chakra,
+  Center,
+  Spinner,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
@@ -25,7 +27,17 @@ const OfferPage: React.FC = ({}) => {
   )
 
   if (error) return <>An error has occurred.</>
-  if (!data) return <>Loading...</>
+  if (!data)
+    return (
+      <Center w="full" h={96} alignContent="center">
+        <Spinner
+          thickness="4px"
+          size="lg"
+          color="gray.300"
+          emptyColor="gray.500"
+        />
+      </Center>
+    )
   return (
     <Container
       mt="3.5rem"

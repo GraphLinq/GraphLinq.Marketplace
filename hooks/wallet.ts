@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import ERC20ABI from 'abis/erc20.json'
+import MARKETPLACEABI from 'abis/marketplace.json'
 import { useOnRepetition } from './useOnRepetition'
 import { ethers } from 'ethers'
+import useContract from './useContract'
+import { useWeb3React } from '@web3-react/core'
 
 /**
  * Get the balance of an ERC20 token in an address
@@ -48,12 +51,75 @@ export const useTokenBalance = (
 }
 
 // get the balance for a single token/account combo
-export function useGlqBalance(account: string, provider: any): BigNumber {
+export function useGlqBalance(provider: any): BigNumber {
+  const { account } = useWeb3React()
   const contract = new ethers.Contract(
     process.env.NEXT_PUBLIC_GRAPHLINQ_TOKEN_CONTRACT || '',
     ERC20ABI,
     provider
   )
-  const glqBalance = useTokenBalance(contract, account)
+  const glqBalance = useTokenBalance(contract, account || '')
   return glqBalance
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function useTemplatePrice(templateId: number): BigNumber {
+  const contract = useContract(
+    process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT || '',
+    MARKETPLACEABI
+  )
+
+  const [templatePrice, setTemplatePrice] = useState<BigNumber>(
+    BigNumber.from(0)
+  )
+
+  const fetchPrice = async () => {
+    if (contract != null) {
+      try {
+        // eslint-disable-next-line
+        const price = await contract.fetchTemplatePrice(templateId)
+        setTemplatePrice(price)
+        return price
+      } catch (e) {
+        console.log('⚠ Could not get template price', e)
+      }
+    }
+  }
+
+  useEffect(() => {
+    fetchPrice()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return templatePrice
+}
+
+export function useTemplateAccess(templateId: number): boolean {
+  const contract = useContract(
+    process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT || '',
+    MARKETPLACEABI
+  )
+
+  const [hasAccess, setHasAccess] = useState<boolean>(false)
+  const { account } = useWeb3React()
+
+  const fetchAccess = async () => {
+    if (contract != null) {
+      try {
+        // eslint-disable-next-line
+        const access = await contract.hasAccess(templateId, account)
+        setHasAccess(access)
+      } catch (e) {
+        console.log('⚠ Could not get template access', e)
+      }
+    }
+  }
+
+  useEffect(() => {
+    fetchAccess()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if (account == '') return false
+  return hasAccess
 }

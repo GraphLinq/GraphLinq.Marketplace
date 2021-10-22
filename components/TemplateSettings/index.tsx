@@ -8,9 +8,14 @@ import {
   FormControl,
   FormLabel,
   Input,
+  createStandaloneToast,
 } from '@chakra-ui/react'
 import GraphService from 'services/graphService'
 import TemplateService from 'services/templateService'
+import useContract from 'hooks/useContract'
+import MARKETPLACEABI from 'abis/marketplace.json'
+import { parseUnits } from 'ethers/lib/utils'
+import Router from 'next/router'
 
 export interface TemplateRoot {
   name: string
@@ -104,6 +109,13 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
     return compData
   }
 
+  const contract = useContract(
+    process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT || '',
+    MARKETPLACEABI
+  )
+
+  const toast = createStandaloneToast()
+
   async function publish() {
     compressGraph(JSON.stringify(templateData)).then(async (data) => {
       //@todo call API on publish endpoint
@@ -128,8 +140,52 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
       })
 
       /* @todo visual feedback for user + redirection */
-      if (result) {
-        console.log('template published')
+      if (result.success && contract != null) {
+        try {
+          const addTx = await contract.addTemplate(
+            result.templateId,
+            parseUnits(props.price),
+            1
+          )
+          toast({
+            title: 'Pending',
+            description: 'Waiting for confirmations ...',
+            position: 'bottom-right',
+            status: 'info',
+            duration: null,
+            isClosable: false,
+          })
+          const addTxReceipt = addTx.wait()
+          toast.closeAll()
+          toast({
+            title: 'Template Published',
+            description: (
+              <a
+                href={`https://etherscan.io/tx/${addTxReceipt.transactionHash}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View on etherscan
+              </a>
+            ),
+            position: 'bottom-right',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+          return Router.replace(`/templates/${result.templateId}`)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (e: any) {
+          console.log(e)
+          toast({
+            title: 'Error',
+            description: e && e.message ? `\n\n${e.message}` : '',
+            position: 'bottom-right',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          })
+        }
       } else {
         console.log(result)
       }
@@ -187,6 +243,9 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
           Publish Template
         </Button>
       </Flex>
+      <Text textColor="whiteAlpha.600" as="i">
+        Fees: 10% of sales will be kept for the Graphlinq Protocol
+      </Text>
     </Stack>
   )
 }
