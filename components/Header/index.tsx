@@ -12,7 +12,6 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   useDisclosure,
@@ -67,8 +66,18 @@ export const Header: React.FC = ({}) => {
               </NextLink>
             )}
           </Box>
-          <Box display={['flex', 'none']} mr="1rem">
-            <MobileMenu />
+          <Box display={['flex', 'none']} mr="1rem" alignItems="center">
+            {!account ? (
+              <NextLink href="/connect">
+                <Button variant="outline" rounded="full" size="sm">
+                  Connect wallet
+                </Button>
+              </NextLink>
+            ) : (
+              <>
+                <MobileMenu />
+              </>
+            )}
           </Box>
           {account && <DropdownMenu />}
         </Flex>
@@ -117,13 +126,14 @@ const MobileMenu: React.FC = ({}) => {
   return (
     <>
       <IconButton
-        aria-label="Search database"
+        aria-label="Menu Mobile"
         rounded="full"
-        size="sm"
+        size="md"
         fontSize="lg"
         variant="outline"
         icon={<Icon as={HiMenu} />}
         onClick={onOpen}
+        mr={2}
       >
         Open
       </IconButton>
@@ -137,24 +147,35 @@ const MobileMenu: React.FC = ({}) => {
 
           <DrawerBody>
             <VStack spacing={4} align="stretch">
-              <Heading size="sm">Community</Heading>
-              <Box h="40px">1</Box>
-              <Box h="40px">2</Box>
-              <Box h="40px">3</Box>
+              <Heading size="sm">Marketplace</Heading>
+              <Box h="40px">
+                <NextLink href="/">
+                  <Link>Templates</Link>
+                </NextLink>
+              </Box>
+              <Box h="40px">
+                <NextLink href="/offers">
+                  <Link>Offers</Link>
+                </NextLink>
+              </Box>
+              <Box h="40px">
+                <NextLink href="/sell">
+                  <Link>Sell Templates</Link>
+                </NextLink>
+              </Box>
             </VStack>
           </DrawerBody>
 
-          <DrawerFooter bgColor="brand.700">
+          {/* <DrawerFooter bgColor="brand.700">
             <Flex justifyContent="space-around" w="full">
               <Button size="sm" rounded="full" mr="0.5rem">
                 Sell Templates
               </Button>
               <Button size="sm" variant="outline" rounded="full">
-                Connect wallet
+                Offers
               </Button>
-              {/* <ColorModeSwitcher /> */}
             </Flex>
-          </DrawerFooter>
+          </DrawerFooter> */}
         </DrawerContent>
       </Drawer>
     </>

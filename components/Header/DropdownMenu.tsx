@@ -29,7 +29,6 @@ import NextLink from 'next/link'
 import { useWeb3React } from '@web3-react/core'
 import { useGlqBalance } from 'hooks/wallet'
 import { formatEther } from 'ethers/lib/utils'
-import { Logout } from './Logout'
 import useSWR from 'swr'
 import { formatCurrency } from 'utils'
 
@@ -161,8 +160,8 @@ export const DropdownMenu: React.FC = () => {
               Personal Settings
             </MenuItem>
           </NextLink>
-          <MenuDivider />
-          <Logout />
+          {/* <MenuDivider />
+          <Logout /> */}
         </MenuGroup>
       </MenuList>
     </Menu>
