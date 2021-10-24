@@ -12,8 +12,10 @@ interface UserTemplatesProps {
 
 const UserTemplates: React.FC<UserTemplatesProps> = ({ userId }) => {
   const { data, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_MANAGER_URL}/users/${userId}/templates/published`,
-    fetcher
+    userId
+      ? `${process.env.NEXT_PUBLIC_MANAGER_URL}/users/${userId}/templates/published`
+      : null,
+    userId ? fetcher : null
   )
   if (error) return <Text>Failure: Can&apos;t reach API</Text>
   return (

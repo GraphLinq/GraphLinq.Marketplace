@@ -118,17 +118,6 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
 
   async function publish() {
     compressGraph(JSON.stringify(templateData)).then(async (data) => {
-      //@todo call API on publish endpoint
-      console.log({
-        name: props.title,
-        description: props.description,
-        category: Number(props.category),
-        price: Number(props.price),
-        data: data,
-        youtube: props.youtubeLink,
-        images: props.fileImagesUpload.files,
-      })
-
       const result = await TemplateService.publishTemplate({
         name: props.title,
         description: props.description,
@@ -155,7 +144,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
             duration: null,
             isClosable: false,
           })
-          const addTxReceipt = addTx.wait()
+          const addTxReceipt = addTx.wait(2)
           toast.closeAll()
           toast({
             title: 'Template Published',
@@ -176,7 +165,6 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
           return Router.replace(`/templates/${result.templateId}`)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
-          console.log(e)
           toast({
             title: 'Error',
             description: e && e.message ? `\n\n${e.message}` : '',
@@ -186,8 +174,6 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
             isClosable: true,
           })
         }
-      } else {
-        console.log(result)
       }
     })
   }

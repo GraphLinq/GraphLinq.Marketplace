@@ -11,6 +11,7 @@ import UpdateNicknameRequest from './requests/user'
 import UpdateNicknameResponse from './responses/user'
 import SubmitOfferRequest from './requests/offer'
 import { SubmitOfferResponse } from './responses/offer'
+import UpdateRequest from './requests/update'
 
 export default class ManagerProvider {
   public static baseUrl: string =
@@ -86,6 +87,78 @@ export default class ManagerProvider {
       fetch(`${this.baseUrl}/templates`, {
         method: 'post',
         body: JSON.stringify(publishTemplate),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res: any) => {
+          res.status === 200
+            ? resolve(res.json() as PublishResponse)
+            : reject(res.json() as ErrorResponse)
+        })
+        .catch((error: any) => reject(error))
+    })
+  }
+
+  public static buyTemplate(
+    userId: number,
+    templateId: number,
+    token: string
+  ): Promise<PublishResponse> {
+    return new Promise<PublishResponse>((resolve, reject) => {
+      fetch(`${this.baseUrl}/users/${userId}/templates/${templateId}`, {
+        method: 'post',
+        //body: '',
+        headers: {
+          //'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res: any) => {
+          res.status === 200
+            ? resolve(res.json() as PublishResponse)
+            : reject(res.json() as ErrorResponse)
+        })
+        .catch((error: any) => reject(error))
+    })
+  }
+
+  public static downloadTemplate(
+    templateId: number,
+    templateVersionId: number,
+    token: string
+  ): Promise<PublishResponse> {
+    return new Promise<PublishResponse>((resolve, reject) => {
+      fetch(
+        `${this.baseUrl}/templates/${templateId}/${templateVersionId}/download`,
+        {
+          method: 'get',
+          //body: '',
+          headers: {
+            //'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((res: any) => {
+          res.status === 200
+            ? resolve(res.json() as PublishResponse)
+            : reject(res.json() as ErrorResponse)
+        })
+        .catch((error: any) => reject(error))
+    })
+  }
+
+  public static updateTemplate(
+    updateTemplate: UpdateRequest,
+    templateId: number,
+    token: string
+  ): Promise<PublishResponse> {
+    return new Promise<PublishResponse>((resolve, reject) => {
+      fetch(`${this.baseUrl}/templates/${templateId}/edit`, {
+        method: 'put',
+        body: JSON.stringify(updateTemplate),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

@@ -9,7 +9,6 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Heading,
   Button,
   useClipboard,
   Center,
@@ -21,6 +20,7 @@ import { shortenAddress } from 'utils'
 import useSWR from 'swr'
 import UserTemplates from '@/components/UserTemplates'
 import { useRouter } from 'next/router'
+import UserPurchasedTemplates from '@/components/UserPurchasedTemplates'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -35,8 +35,7 @@ const UserProfile: NextPage = () => {
     id ? fetcher : null
   )
 
-  const userBanner =
-    'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
+  //const userBanner = 'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
 
   if (error) return <Text>An error has occurred.</Text>
   if (!data)
@@ -57,7 +56,8 @@ const UserProfile: NextPage = () => {
         bgColor="rgba(5, 5, 5, 0.2)"
         bgSize="cover"
         bgPosition="center center"
-        bg={`url('${userBanner}')`}
+        //bg={`url('${userBanner}')`}
+        //bg={`url('${userBanner}')`}
         position="relative"
       >
         <Flex
@@ -114,9 +114,7 @@ const UserProfile: NextPage = () => {
               <UserTemplates userId={Number(id)} />
             </TabPanel>
             <TabPanel>
-              <Heading size="lg" py={12}>
-                No items found
-              </Heading>
+              <UserPurchasedTemplates userId={Number(id)} />
             </TabPanel>
             {/* <TabPanel>
               <Heading size="lg" py={12}>

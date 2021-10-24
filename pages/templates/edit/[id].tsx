@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { TemplateRoot } from '@/components/TemplateSettings'
+import { TemplateEditUpload } from '@/components/TemplateEditUpload'
 import {
   Heading,
   Container,
@@ -6,24 +7,20 @@ import {
   Spinner,
   useBoolean,
 } from '@chakra-ui/react'
-//import { useRouter } from 'next/router'
-import useSWR from 'swr'
-import { TemplateUpload } from '@/components/TemplateUpload'
-import { TemplateRoot, TemplateSettings } from '@/components/TemplateSettings'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import GraphService from 'services/graphService'
+import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-const TemplatePage: React.FC = ({}) => {
-  //@todo get template data to edit
-  //const router = useRouter()
-  //const { templateId } = router.query
-  /* const { data, error } = useSWR(
-    `http://127.0.0.1.4561/templates/${templateId}`,
-    fetcher
-  ) */
-  const { data, error } = useSWR(`/api/template`, fetcher)
-
+const TemplateEdit: React.FC = ({}) => {
+  const router = useRouter()
+  const { id } = router.query
+  const { data, error } = useSWR(
+    id ? `http://127.0.0.1:4561/templates/${id}` : null,
+    id ? fetcher : null
+  )
   const [step, setStep] = useBoolean()
   const [price, setPrice] = useState('')
   const [title, setTitle] = useState('')
@@ -43,8 +40,20 @@ const TemplatePage: React.FC = ({}) => {
   }>({ loaded: false, files: [] })
 
   const [compressedTemplate, setCompressedTemplate] = useState<string>()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [decompressedTemplate, setDecompressedTemplate] =
     useState<TemplateRoot>({ name: '', nodes: [], comments: [] })
+
+  useEffect(() => {
+    if (data) {
+      setPrice(data.results.template_cost)
+      setTitle(data.results.name)
+      setCategory(data.results.category?.id || 1)
+      setDescription(data.results.description)
+      setYoutubeLink(data.results.youtubeLink)
+      //setCompressedTemplate(data.results.raw_bytes)
+    }
+  }, [data])
 
   useEffect(() => {
     const fetchGraphData = async (template: string) => {
@@ -56,14 +65,6 @@ const TemplatePage: React.FC = ({}) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [compressedTemplate])
-
-  useEffect(() => {
-    setPrice(data[0].price.price)
-    setTitle(data[0].title)
-    setCategory(data[0].category.id)
-    setDescription(data[0].description)
-    setYoutubeLink(data[0].youtubeLink)
-  }, [data])
 
   if (error) return <>An error has occurred.</>
   if (!data)
@@ -77,6 +78,7 @@ const TemplatePage: React.FC = ({}) => {
         />
       </Center>
     )
+  //console.log(data)
   return (
     <Container
       mt="3.5rem"
@@ -88,7 +90,7 @@ const TemplatePage: React.FC = ({}) => {
         Edit Template
       </Heading>
       {!step ? (
-        <TemplateUpload
+        <TemplateEditUpload
           setStep={setStep}
           price={price}
           setPrice={setPrice}
@@ -106,22 +108,18 @@ const TemplatePage: React.FC = ({}) => {
           setFileUpload={setFileUpload}
           fileImagesUpload={fileImagesUpload}
           setFileImagesUpload={setFileImagesUpload}
+          compressedTemplate={compressedTemplate}
           setCompressedTemplate={setCompressedTemplate}
+          templateId={Number(id)}
+          templateVersion={data.results.versions.at(-1).id}
         />
+      ) : compressedTemplate != null ? (
+        <>yes</>
       ) : (
-        <TemplateSettings
-          setStep={setStep}
-          title={title}
-          description={description}
-          category={category}
-          price={price}
-          decompressedTemplate={decompressedTemplate}
-          youtubeLink={youtubeLink}
-          fileImagesUpload={fileImagesUpload}
-        />
+        <>no template</>
       )}
     </Container>
   )
 }
 
-export default TemplatePage
+export default TemplateEdit

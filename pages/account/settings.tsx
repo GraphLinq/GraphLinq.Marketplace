@@ -33,6 +33,7 @@ const Settings: NextPage = () => {
   async function updateProfile() {
     try {
       if (nickName != '') {
+        /** @todo try/catch && toast notification feedback */
         const result = await UserService.updateNickname({ name: nickName })
         if (result) {
           console.log('nickname updated')

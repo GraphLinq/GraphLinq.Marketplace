@@ -49,7 +49,7 @@ const TemplatePage: React.FC = ({}) => {
         <Box placeSelf="end" p={[0, 6]}>
           {/* button edit owner only */}
           {data.results.user.publicAddress == account && (
-            <NextLink href={`/templates/edit?id=${data.results.id}`}>
+            <NextLink href={`/templates/edit/${data.results.id}`}>
               <Button size="md" leftIcon={<Icon as={FaCog} />}>
                 Edit
               </Button>
