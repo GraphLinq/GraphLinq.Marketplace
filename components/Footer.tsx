@@ -31,7 +31,7 @@ const Footer: React.FC = ({}) => {
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Sell on GraphLinq</ListHeader>
-            <Link href={'#'}>Sell Templates</Link>
+            <Link href={'/sell'}>Sell Templates</Link>
             <Link href={'#'}>Submission Guidelines</Link>
             <Link href={'#'}>Become a partner</Link>
           </Stack>
@@ -49,11 +49,24 @@ const Footer: React.FC = ({}) => {
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Follow Us</ListHeader>
-            <Link href={'#'}>Telegram</Link>
-            <Link href={'#'}>Twitter</Link>
-            <Link href={'#'}>LinkedIn</Link>
-            <Link href={'#'}>Instagram</Link>
-            <Link href={'#'}>Reddit</Link>
+            <Link href={'https://t.me/graphlinq'} isExternal>
+              Telegram
+            </Link>
+            <Link href={'https://twitter.com/graphlinq_proto'} isExternal>
+              Twitter
+            </Link>
+            <Link
+              href={'https://www.linkedin.com/company/graphlinq-protocol'}
+              isExternal
+            >
+              LinkedIn
+            </Link>
+            <Link href={'https://www.instagram.com/graphlinq/'} isExternal>
+              Instagram
+            </Link>
+            <Link href={'https://www.reddit.com/r/graphlinq/'} isExternal>
+              Reddit
+            </Link>
           </Stack>
         </SimpleGrid>
       </Container>
