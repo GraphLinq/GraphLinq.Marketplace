@@ -17,7 +17,8 @@ const UserTemplates: React.FC<UserTemplatesProps> = ({ userId }) => {
       : null,
     userId ? fetcher : null
   )
-  if (error) return <Text>Failure: Can&apos;t reach API</Text>
+  if (error) return <Text>No items</Text>
+  if (!data) return <Text>Loading...</Text>
   return (
     <Flex
       flexDir="row"
@@ -29,7 +30,7 @@ const UserTemplates: React.FC<UserTemplatesProps> = ({ userId }) => {
       {!data
         ? 'loading...'
         : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          data.templates.publishedTemplates.map((t: Templates, i: number) => {
+          data.results.publishedTemplates.map((t: Templates, i: number) => {
             return (
               <TemplateCard
                 key={`${t.id}-${i}`}

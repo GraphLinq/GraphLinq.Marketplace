@@ -35,6 +35,10 @@ const UserProfile: NextPage = () => {
     id ? fetcher : null
   )
 
+  let session
+  if (typeof window !== 'undefined')
+    session = JSON.parse(localStorage.getItem('session') as string)
+
   //const userBanner = 'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
 
   if (error) return <Text>An error has occurred.</Text>
@@ -85,7 +89,7 @@ const UserProfile: NextPage = () => {
             {shortenAddress(data.id)}
           </Button>
         </VStack>
-        <Tabs size="lg" mt="3.5rem">
+        <Tabs size="lg" mt="3.5rem" isLazy>
           <TabList mb="1em">
             <Tab
               fontWeight="500"
@@ -94,33 +98,25 @@ const UserProfile: NextPage = () => {
             >
               On Sale
             </Tab>
-            <Tab
-              fontWeight="500"
-              color="text.200"
-              _selected={{ color: 'text.50', borderColor: 'text.100' }}
-            >
-              My Purchased Templates
-            </Tab>
-            {/* <Tab
-              fontWeight="500"
-              color="text.200"
-              _selected={{ color: 'text.50', borderColor: 'text.100' }}
-            >
-              Favorites
-            </Tab> */}
+            {Number(id) == session?.account_id && (
+              <Tab
+                fontWeight="500"
+                color="text.200"
+                _selected={{ color: 'text.50', borderColor: 'text.100' }}
+              >
+                My Purchased Templates
+              </Tab>
+            )}
           </TabList>
           <TabPanels>
             <TabPanel>
               <UserTemplates userId={Number(id)} />
             </TabPanel>
-            <TabPanel>
-              <UserPurchasedTemplates userId={Number(id)} />
-            </TabPanel>
-            {/* <TabPanel>
-              <Heading size="lg" py={12}>
-                No items found
-              </Heading>
-            </TabPanel> */}
+            {Number(id) == session?.account_id && (
+              <TabPanel>
+                <UserPurchasedTemplates userId={Number(id)} />
+              </TabPanel>
+            )}
           </TabPanels>
         </Tabs>
       </Container>
