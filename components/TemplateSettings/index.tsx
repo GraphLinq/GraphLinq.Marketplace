@@ -77,6 +77,17 @@ interface TemplateSettingsProps {
   }
 }
 
+interface APIResponse {
+  success: boolean
+  errors?: APIError[]
+}
+
+interface APIError {
+  name: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  messages: any
+}
+
 export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
   const [templateData, setTemplateData] = useState<TemplateRoot>(
     props.decompressedTemplate
@@ -116,6 +127,8 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
 
   const toast = createStandaloneToast()
 
+  const [apiResult, setApiResult] = useState<APIResponse>()
+
   async function publish() {
     compressGraph(JSON.stringify(templateData)).then(async (data) => {
       const result = await TemplateService.publishTemplate({
@@ -127,7 +140,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
         youtube: props.youtubeLink,
         images: props.fileImagesUpload.files,
       })
-
+      setApiResult(result)
       /* @todo visual feedback for user + redirection */
       if (result.success && contract != null) {
         try {
@@ -215,6 +228,14 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
             </FormControl>
           </Flex>
         ))}
+      {apiResult?.errors &&
+        apiResult.errors.map((error: APIError) => {
+          return (
+            <Text color="red.400" key={`error-${error.name}`}>
+              {error.name} Error: {JSON.stringify(error.messages)}
+            </Text>
+          )
+        })}
       <Flex w="full">
         <Button
           w="50%"
