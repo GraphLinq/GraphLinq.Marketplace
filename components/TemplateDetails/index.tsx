@@ -172,6 +172,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
           <TemplateDownloadButton
             templateId={props.id}
             templateVersionId={props.versions.at(-1)?.id || 0}
+            templateName={props.name}
           />
         ) : (
           <TemplateBuyButton

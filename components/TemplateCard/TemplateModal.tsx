@@ -28,6 +28,7 @@ import { useTemplateAccess, useTemplatePrice } from 'hooks/wallet'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import { TemplateBuyButton } from '../TemplateBuyButton'
+import { TemplateDownloadButton } from '../TemplateDownloadButton'
 
 interface TemplateModalProps {
   user?: User
@@ -258,11 +259,11 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
           <ModalFooter>
             {/* @todo handle download */}
             {access ? (
-              <NextLink href="#buy">
-                <Button size="lg" rounded="lg" mr="0.5rem">
-                  Download
-                </Button>
-              </NextLink>
+              <TemplateDownloadButton
+                templateId={props.template.id}
+                templateVersionId={props.template.versions.at(-1)?.id || 0}
+                templateName={props.template.name}
+              />
             ) : (
               <TemplateBuyButton
                 templateId={props.template.id}
