@@ -3,7 +3,6 @@ import {
   Container,
   Heading,
   Flex,
-  HStack,
   Button,
   Menu,
   MenuButton,
@@ -11,7 +10,6 @@ import {
   MenuOptionGroup,
   MenuItemOption,
   Icon,
-  useBreakpointValue,
   Spacer,
   Spinner,
   Center,
@@ -20,9 +18,7 @@ import {
 import { HiOutlineAdjustments } from 'react-icons/hi'
 import TemplateCard from '@/components/TemplateCard'
 import useSWR from 'swr'
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
-const PAGE_SIZE = 24
+import { useState } from 'react'
 
 export interface Templates {
   id: number
@@ -62,16 +58,33 @@ interface Version {
   updatedAt: string
 }
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+const PAGE_SIZE = 24
+
 const Home: NextPage = () => {
-  const variant = useBreakpointValue({ base: '', md: 'scrollbar-x' })
+  //const variant = useBreakpointValue({ base: '', md: 'scrollbar-x' })
+
+  const [sort, setSort] = useState<number>(0)
+  const [size, setSize] = useState<number>(0)
+  const [filterName, setFilterName] = useState<string>('recent')
+
+  function changeFilter(name: string, sortId: number) {
+    setFilterName(name)
+    setSort(sortId)
+  }
 
   //const { data, error } = useSWRInfinite(`${process.env.NEXT_PUBLIC_MANAGER_URL}/templates/?page=${index + 1}&limit=${PAGE_SIZE}`, fetcher)
   const { data, error } = useSWR(
-    `${
-      process.env.NEXT_PUBLIC_MANAGER_URL
-    }/templates/?page=${1}&limit=${PAGE_SIZE}`,
+    `${process.env.NEXT_PUBLIC_MANAGER_URL}/templates/?page=${1}&limit=${
+      PAGE_SIZE + size
+    }&sort=${sort}`,
     fetcher
   )
+
+  function loadMoreTemplates() {
+    setSize(size + 12)
+    console.log('loaded more')
+  }
 
   if (error) return <>An error has occurred.</>
   if (!data)
@@ -115,8 +128,10 @@ const Home: NextPage = () => {
           <Heading fontSize="1.5rem" mb={['1rem', '0rem']}>
             Explore
           </Heading>
+          {/* Category & Template filter */}
           <Flex w="full">
-            <HStack
+            {/* Category filters */}
+            {/* <HStack
               flexShrink={1}
               spacing="1.5rem"
               ml={['0rem', '1rem']}
@@ -172,7 +187,7 @@ const Home: NextPage = () => {
               >
                 🤖 Bot Discord
               </Button>
-            </HStack>
+            </HStack> */}
             <Spacer />
             <Flex flexShrink={0} ml="0.5rem">
               <Menu>
@@ -187,18 +202,24 @@ const Home: NextPage = () => {
                 </MenuButton>
                 <MenuList bgColor="brand.500">
                   <MenuOptionGroup
-                    defaultValue="recent"
+                    defaultValue={filterName}
                     title="Sort by"
                     type="radio"
                   >
                     <MenuItemOption value="recent">
                       Recently added
                     </MenuItemOption>
-                    <MenuItemOption value="rating">Rating</MenuItemOption>
-                    <MenuItemOption value="low2high">
+                    {/* <MenuItemOption value="rating">Rating</MenuItemOption> */}
+                    <MenuItemOption
+                      value="low2high"
+                      onClick={() => changeFilter('low2high', 2)}
+                    >
                       Price (Low to High)
                     </MenuItemOption>
-                    <MenuItemOption value="high2low">
+                    <MenuItemOption
+                      value="high2low"
+                      onClick={() => changeFilter('high2low', 3)}
+                    >
                       Price (High to Low)
                     </MenuItemOption>
                   </MenuOptionGroup>
@@ -222,7 +243,12 @@ const Home: NextPage = () => {
             <Text>No templates</Text>
           )}
         </Flex>
-        <Button w="full" variant="outline" rounded="full">
+        <Button
+          w="full"
+          variant="outline"
+          rounded="full"
+          onClick={loadMoreTemplates}
+        >
           Load more
         </Button>
       </Container>
