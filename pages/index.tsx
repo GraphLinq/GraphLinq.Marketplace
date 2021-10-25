@@ -235,12 +235,14 @@ const Home: NextPage = () => {
           justifyContent="start"
           pt="2rem"
         >
-          {data != [] ? (
+          {data.results && data.results === 0 ? (
+            <Text fontSize="lg" mb={4}>
+              No templates yet
+            </Text>
+          ) : (
             data.results.map((t: Templates, i: number) => {
               return <TemplateCard key={`${t.id}-${i}`} template={t} />
             })
-          ) : (
-            <Text>No templates</Text>
           )}
         </Flex>
         <Button
