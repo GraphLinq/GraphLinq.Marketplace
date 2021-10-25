@@ -11,14 +11,15 @@ import {
   InputRightAddon,
   Textarea,
   Select,
-  Switch,
-  useBoolean,
   createStandaloneToast,
 } from '@chakra-ui/react'
-import { createRef, useState } from 'react'
+import { useState } from 'react'
 import { ALL_CATEGORY_IDS, CATEGORY_INFO } from 'constants/template'
 import Router from 'next/router'
 import TemplateService from 'services/templateService'
+import useContract from 'hooks/useContract'
+import MARKETPLACEABI from 'abis/marketplace.json'
+import { parseUnits } from '@ethersproject/units'
 
 interface TemplateEditUploadProps {
   setStep: {
@@ -63,7 +64,6 @@ interface TemplateEditUploadProps {
 export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
   props
 ) => {
-  const inputFileRef = createRef<HTMLInputElement>()
   const [error, setError] = useState('')
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -79,6 +79,7 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => props.setDescription(event.target.value)
 
+  /*const inputFileRef = createRef<HTMLInputElement>()
   function onInputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     const element = event.target as HTMLInputElement
     element.value = ''
@@ -93,9 +94,9 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
       const result = await e.target.files.item(0)?.text()
       props.setCompressedTemplate(result)
     }
-  }
+  } */
 
-  const [showFileUpload, setShowFileUpload] = useBoolean()
+  //const [showFileUpload, setShowFileUpload] = useBoolean()
   //const [templateVisibility, setTemplateVisibility] = useBoolean()
 
   function nextStep() {
@@ -113,10 +114,14 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
     }
   }
 
+  const contract = useContract(
+    process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT || '',
+    MARKETPLACEABI
+  )
+
   const toast = createStandaloneToast()
 
   async function updateTemplate() {
-    console.log('updated')
     const result = await TemplateService.updateTemplate(
       {
         name: props.title,
@@ -128,11 +133,32 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
       },
       props.templateId
     )
-
-    if (result) {
+    if (result.success && contract != null) {
+      const updateTx = await contract.updateTemplate(
+        props.templateId,
+        parseUnits(props.price),
+        1 //Number(templateVisibility)
+      )
       toast({
-        title: 'Success',
-        description: 'Template Updated',
+        title: 'Pending',
+        description: 'Waiting for confirmations ...',
+        position: 'bottom-right',
+        status: 'info',
+        duration: null,
+        isClosable: false,
+      })
+      const updateTxReceipt = updateTx.wait(2)
+      toast({
+        title: 'Template Updated',
+        description: (
+          <a
+            href={`https://etherscan.io/tx/${updateTxReceipt.transactionHash}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            View on etherscan
+          </a>
+        ),
         position: 'bottom-right',
         status: 'success',
         duration: 9000,
@@ -144,13 +170,19 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
 
   return (
     <Stack as="form" spacing={5} w={['xs', 'md', 'xl']} pt={12} pb={32}>
+      {/* template state switch */}
       {/* <FormControl display="flex" alignItems="center">
         <FormLabel htmlFor="template-visibility" mb="0">
           Hide template
         </FormLabel>
-        <Switch id="template-visibility" onChange={setTemplateVisibility.toggle} />
+        <Switch
+          id="template-visibility"
+          value={Number(templateVisibility)}
+          onChange={setTemplateVisibility.toggle}
+        />
       </FormControl> */}
-      <FormControl display="flex" alignItems="center">
+      {/* Show file upload switch and button */}
+      {/* <FormControl display="flex" alignItems="center">
         <FormLabel htmlFor="template-show-upload" mb="0">
           Update template file ?
         </FormLabel>
@@ -190,7 +222,7 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
             </Button>
           </Flex>
         </FormControl>
-      )}
+      )}*/}
       <FormControl id="template-price" isRequired>
         <FormLabel>Price</FormLabel>
         <InputGroup>

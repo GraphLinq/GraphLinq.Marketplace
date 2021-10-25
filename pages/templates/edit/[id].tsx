@@ -46,7 +46,7 @@ const TemplateEdit: React.FC = ({}) => {
 
   useEffect(() => {
     if (data) {
-      setPrice(data.results.template_cost)
+      setPrice(data.results.template_cost.toString())
       setTitle(data.results.name)
       setCategory(data.results.category?.id || 1)
       setDescription(data.results.description)
