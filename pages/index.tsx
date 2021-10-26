@@ -245,14 +245,16 @@ const Home: NextPage = () => {
             })
           )}
         </Flex>
-        <Button
-          w="full"
-          variant="outline"
-          rounded="full"
-          onClick={loadMoreTemplates}
-        >
-          Load more
-        </Button>
+        {data.results && Object.keys(data.results).length > 12 && (
+          <Button
+            w="full"
+            variant="outline"
+            rounded="full"
+            onClick={loadMoreTemplates}
+          >
+            Load more
+          </Button>
+        )}
       </Container>
     </>
   )
