@@ -14,7 +14,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const OfferPage: React.FC = ({}) => {
   const { data, error } = useSWR(
-    `http://127.0.0.1:4561/offers/?page=1&limit=5`,
+    `${process.env.NEXT_PUBLIC_MANAGER_URL}/offers/?page=1&limit=5`,
     fetcher
   )
 

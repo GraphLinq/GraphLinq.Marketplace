@@ -22,7 +22,7 @@ const OfferPage: React.FC = ({}) => {
   const router = useRouter()
   const { id } = router.query
   const { data, error } = useSWR(
-    id ? `http://127.0.0.1:4561/offers/${id}` : null,
+    id ? `${process.env.NEXT_PUBLIC_MANAGER_URL}/offers/${id}` : null,
     id ? fetcher : null
   )
 
