@@ -96,6 +96,7 @@ const Settings: NextPage = () => {
             <Button
               htmlFor="files"
               ml={6}
+              disabled
               leftIcon={<Icon as={HiUpload} />}
               onClick={() => {
                 inputFileRef.current?.click()
