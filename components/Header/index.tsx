@@ -3,9 +3,6 @@ import {
   Container,
   Box,
   Button,
-  DarkMode,
-  InputGroup,
-  Input,
   Icon,
   Link,
   Drawer,
@@ -20,11 +17,12 @@ import {
   VStack,
   Heading,
 } from '@chakra-ui/react'
-import { HiMenu, HiOutlineSearch } from 'react-icons/hi'
+import { HiMenu } from 'react-icons/hi'
 import { Logo } from '../Logo'
 import NextLink from 'next/link'
 import { DropdownMenu } from './DropdownMenu'
 import { useWeb3React } from '@web3-react/core'
+import { SearchBar } from '../SearchBar'
 
 export const Header: React.FC = ({}) => {
   const { account } = useWeb3React()
@@ -82,40 +80,7 @@ export const Header: React.FC = ({}) => {
           {account && <DropdownMenu />}
         </Flex>
       </Container>
-      <Container
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        pb="1rem"
-        h="4rem"
-        m="auto"
-        maxW={['container.sm', 'container.md', 'container.xl']}
-      >
-        <DarkMode>
-          <InputGroup justifyContent="center" position="relative" size="lg">
-            <Input
-              type="text"
-              placeholder="Search for templates"
-              pl="56px"
-              variant="filled"
-            />
-            <Box
-              display="flex"
-              alignItems="center"
-              position="absolute"
-              left="20px"
-              top="16px"
-            >
-              <Icon
-                as={HiOutlineSearch}
-                color="white"
-                sx={{ '> path ': { strokeWidth: '3' } }}
-              />
-            </Box>
-          </InputGroup>
-        </DarkMode>
-      </Container>
+      <SearchBar />
     </Box>
   )
 }
