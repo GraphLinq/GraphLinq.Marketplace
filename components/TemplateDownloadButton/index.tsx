@@ -12,6 +12,7 @@ export const TemplateDownloadButton: React.FC<TemplateDownloadButtonProps> = (
   props
 ) => {
   const [fileData, setFileData] = useState<string>()
+  const [dataAvailable, setDataAvailable] = useState<boolean>(false)
 
   useEffect(() => {
     const getData = async () => {
@@ -20,8 +21,8 @@ export const TemplateDownloadButton: React.FC<TemplateDownloadButtonProps> = (
         props.templateVersionId
       )
       if (result.success) {
-        console.log(result.results)
         setFileData(result.results)
+        setDataAvailable(true)
         return result.results
       }
     }
@@ -38,6 +39,8 @@ export const TemplateDownloadButton: React.FC<TemplateDownloadButtonProps> = (
         fileData || ''
       )}`}
       download={`${props.templateName}.glq`}
+      disabled={fileData == undefined && !dataAvailable}
+      isLoading={fileData == undefined && !dataAvailable}
     >
       Download
     </Button>

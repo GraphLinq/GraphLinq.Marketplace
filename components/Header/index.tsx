@@ -38,7 +38,7 @@ export const Header: React.FC = ({}) => {
         m="auto"
         maxW={['container.sm', 'container.md', 'container.xl']}
       >
-        <NextLink href="/">
+        <NextLink href="/" passHref>
           <Link display="flex" alignItems="center">
             <Logo w={['6rem', '10rem']} h="auto" />
           </Link>
@@ -46,19 +46,19 @@ export const Header: React.FC = ({}) => {
 
         <Flex alignItems="center">
           <Box display={['none', 'flex']} mr="1rem">
-            <NextLink href="/offers">
-              <Button rounded="full" mr="1rem">
+            <NextLink href="/offers" passHref>
+              <Button as="a" rounded="full" mr="1rem">
                 Offers
               </Button>
             </NextLink>
-            <NextLink href="/sell">
-              <Button rounded="full" mr="1rem">
+            <NextLink href="/sell" passHref>
+              <Button as="a" rounded="full" mr="1rem">
                 Sell Templates
               </Button>
             </NextLink>
             {!account && (
-              <NextLink href="/connect">
-                <Button variant="outline" rounded="full">
+              <NextLink href="/connect" passHref>
+                <Button as="a" variant="outline" rounded="full">
                   Connect wallet
                 </Button>
               </NextLink>
@@ -66,7 +66,7 @@ export const Header: React.FC = ({}) => {
           </Box>
           <Box display={['flex', 'none']} mr="1rem" alignItems="center">
             {!account ? (
-              <NextLink href="/connect">
+              <NextLink href="/connect" passHref>
                 <Button variant="outline" rounded="full" size="sm">
                   Connect wallet
                 </Button>

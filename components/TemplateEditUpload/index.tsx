@@ -16,11 +16,12 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { ALL_CATEGORY_IDS, CATEGORY_INFO } from 'constants/template'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import TemplateService from 'services/templateService'
 import useContract from 'hooks/useContract'
 import MARKETPLACEABI from 'abis/marketplace.json'
 import { parseUnits } from '@ethersproject/units'
+import { useWeb3React } from '@web3-react/core'
 
 interface TemplateEditUploadProps {
   setStep: {
@@ -128,6 +129,9 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
     }
   }
 
+  const { library } = useWeb3React()
+  const router = useRouter()
+
   const contract = useContract(
     process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT || '',
     MARKETPLACEABI
@@ -161,7 +165,8 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
         duration: null,
         isClosable: false,
       })
-      const updateTxReceipt = updateTx.wait(2)
+      const updateTxReceipt = await library.waitForTransaction(updateTx.hash, 2)
+      toast.closeAll()
       toast({
         title: 'Template Updated',
         description: (
@@ -178,7 +183,8 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
         duration: 9000,
         isClosable: true,
       })
-      return Router.replace('/')
+      //return Router.replace('/')
+      router.push(`/templates/${props.templateId}`)
     }
   }
 

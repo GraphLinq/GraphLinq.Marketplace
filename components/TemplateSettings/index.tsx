@@ -15,7 +15,8 @@ import TemplateService from 'services/templateService'
 import useContract from 'hooks/useContract'
 import MARKETPLACEABI from 'abis/marketplace.json'
 import { parseUnits } from 'ethers/lib/utils'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
+import { useWeb3React } from '@web3-react/core'
 
 export interface TemplateRoot {
   name: string
@@ -120,6 +121,9 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
     return compData
   }
 
+  const { library } = useWeb3React()
+  const router = useRouter()
+
   const contract = useContract(
     process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT || '',
     MARKETPLACEABI
@@ -157,7 +161,8 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
             duration: null,
             isClosable: false,
           })
-          const addTxReceipt = addTx.wait(2)
+          //const addTxReceipt = addTx.wait(2)
+          const addTxReceipt = await library.waitForTransaction(addTx.hash, 2)
           toast.closeAll()
           toast({
             title: 'Template Published',
@@ -175,7 +180,8 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
             duration: 9000,
             isClosable: true,
           })
-          return Router.replace(`/templates/${result.templateId}`)
+          //return Router.replace(`/templates/${result.templateId}`)
+          router.push(`/templates/${result.templateId}`)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
           toast({

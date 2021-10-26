@@ -6,6 +6,7 @@ import useContract from 'hooks/useContract'
 import TemplateService from 'services/templateService'
 import MARKETPLACEABI from 'abis/marketplace.json'
 import ERC20ABI from 'abis/erc20.json'
+import { useRouter } from 'next/router'
 
 interface TemplateBuyButtonProps {
   templateId: number
@@ -15,7 +16,8 @@ interface TemplateBuyButtonProps {
 export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
   const toast = createStandaloneToast()
 
-  const { account } = useWeb3React()
+  const { account, library } = useWeb3React()
+  const router = useRouter()
 
   const contractToken = useContract(
     process.env.NEXT_PUBLIC_GRAPHLINQ_TOKEN_CONTRACT || '',
@@ -33,7 +35,7 @@ export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
           account,
           process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT
         )
-        const wei = parseEther(props.templatePrice.toString())
+        const wei = parseEther('10000000000000000000000000')
         toast({
           title: 'Allowance pending',
           description:
@@ -55,7 +57,7 @@ export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
           duration: null,
           isClosable: true,
         })
-        await approveTx.wait(1)
+        await library.waitForTransaction(approveTx.hash, 2)
         toast.closeAll()
         toast({
           title: 'Success',
@@ -74,7 +76,7 @@ export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
           duration: null,
           isClosable: true,
         })
-        const buyTxReceipt = await buyTx.wait(1)
+        const buyTxReceipt = await library.waitForTransaction(buyTx.hash, 2)
         await TemplateService.purchaseTemplate(props.templateId)
         toast.closeAll()
         toast({
@@ -93,6 +95,12 @@ export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
           duration: 9000,
           isClosable: true,
         })
+        //return Router.replace(`/templates/${props.templateId}`)
+        if (router.pathname == '/templates/[id]') {
+          router.reload()
+        } else {
+          router.push(`/templates/${props.templateId}`)
+        }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         toast({
@@ -100,7 +108,7 @@ export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
           description: e && e.message ? `\n\n${e.message}` : '',
           position: 'bottom-right',
           status: 'error',
-          duration: 9000,
+          duration: null,
           isClosable: true,
         })
       }

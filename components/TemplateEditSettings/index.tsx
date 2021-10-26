@@ -15,8 +15,9 @@ import TemplateService from 'services/templateService'
 import useContract from 'hooks/useContract'
 import MARKETPLACEABI from 'abis/marketplace.json'
 import { parseUnits } from 'ethers/lib/utils'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import { TemplateNode, TemplateRoot } from '../TemplateSettings'
+import { useWeb3React } from '@web3-react/core'
 
 interface TemplateEditSettingsProps {
   setStep: {
@@ -83,6 +84,9 @@ export const TemplateEditSettings: React.FC<TemplateEditSettingsProps> = (
     return compData
   }
 
+  const { library } = useWeb3React()
+  const router = useRouter()
+
   const contract = useContract(
     process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT || '',
     MARKETPLACEABI
@@ -122,7 +126,7 @@ export const TemplateEditSettings: React.FC<TemplateEditSettingsProps> = (
             duration: null,
             isClosable: false,
           })
-          const addTxReceipt = addTx.wait(2)
+          const addTxReceipt = await library.waitForTransaction(addTx.hash, 2)
           toast.closeAll()
           toast({
             title: 'Template Updated',
@@ -140,7 +144,8 @@ export const TemplateEditSettings: React.FC<TemplateEditSettingsProps> = (
             duration: 9000,
             isClosable: true,
           })
-          return Router.replace(`/templates/${props.templateId}`)
+          //return Router.replace(`/templates/${props.templateId}`)
+          router.push(`/templates/${result.templateId}`)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
           toast({
