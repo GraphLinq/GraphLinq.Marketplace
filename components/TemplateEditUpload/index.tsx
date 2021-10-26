@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createRef } from 'react'
 import {
   Stack,
   Text,
@@ -12,6 +12,7 @@ import {
   Textarea,
   Select,
   createStandaloneToast,
+  Switch,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { ALL_CATEGORY_IDS, CATEGORY_INFO } from 'constants/template'
@@ -39,6 +40,12 @@ interface TemplateEditUploadProps {
   setThumbnail: React.Dispatch<React.SetStateAction<string>>
   youtubeLink: string
   setYoutubeLink: React.Dispatch<React.SetStateAction<string>>
+  showFileUpload: boolean
+  setShowFileUpload: {
+    readonly on: () => void
+    readonly off: () => void
+    readonly toggle: () => void
+  }
   fileUpload: {
     loaded: boolean
     file: File | null
@@ -79,7 +86,7 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => props.setDescription(event.target.value)
 
-  /*const inputFileRef = createRef<HTMLInputElement>()
+  const inputFileRef = createRef<HTMLInputElement>()
   function onInputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     const element = event.target as HTMLInputElement
     element.value = ''
@@ -94,10 +101,17 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
       const result = await e.target.files.item(0)?.text()
       props.setCompressedTemplate(result)
     }
-  } */
+  }
 
-  //const [showFileUpload, setShowFileUpload] = useBoolean()
-  //const [templateVisibility, setTemplateVisibility] = useBoolean()
+  function toggleUpload() {
+    props.setShowFileUpload.toggle()
+    if (props.showFileUpload == false) {
+      props.setFileUpload({
+        loaded: false,
+        file: null,
+      })
+    }
+  }
 
   function nextStep() {
     if (
@@ -128,7 +142,7 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
         description: props.description,
         category_id: Number(props.category),
         template_cost: Number(props.price),
-        data: '',
+        data: [],
         version_id: props.templateVersion,
       },
       props.templateId
@@ -182,13 +196,17 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
         />
       </FormControl> */}
       {/* Show file upload switch and button */}
-      {/* <FormControl display="flex" alignItems="center">
+      <FormControl display="flex" alignItems="center">
         <FormLabel htmlFor="template-show-upload" mb="0">
           Update template file ?
         </FormLabel>
-        <Switch id="template-show-upload" onChange={setShowFileUpload.toggle} />
+        <Switch
+          id="template-show-upload"
+          isChecked={props.showFileUpload}
+          onChange={toggleUpload}
+        />
       </FormControl>
-      {showFileUpload && (
+      {props.showFileUpload && (
         <FormControl id="template-file" isRequired>
           <Flex
             direction="column"
@@ -211,7 +229,7 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
             <Text mb={2}>
               {props.fileUpload.loaded
                 ? props.fileUpload.file?.name
-                : 'Update template if needed'}
+                : 'Select a .GLQ file'}
             </Text>
             <Button
               onClick={() => {
@@ -222,7 +240,7 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
             </Button>
           </Flex>
         </FormControl>
-      )}*/}
+      )}
       <FormControl id="template-price" isRequired>
         <FormLabel>Price</FormLabel>
         <InputGroup>

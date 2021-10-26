@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import GraphService from 'services/graphService'
 import useSWR from 'swr'
+import { TemplateEditSettings } from '@/components/TemplateEditSettings'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -28,6 +29,8 @@ const TemplateEdit: React.FC = ({}) => {
   const [description, setDescription] = useState('')
   const [thumbnail, setThumbnail] = useState('')
   const [youtubeLink, setYoutubeLink] = useState('')
+
+  const [showFileUpload, setShowFileUpload] = useBoolean()
 
   const [fileUpload, setFileUpload] = useState<{
     loaded: boolean
@@ -112,9 +115,22 @@ const TemplateEdit: React.FC = ({}) => {
           setCompressedTemplate={setCompressedTemplate}
           templateId={Number(id)}
           templateVersion={data.results.versions.at(-1).id}
+          showFileUpload={showFileUpload}
+          setShowFileUpload={setShowFileUpload}
         />
       ) : compressedTemplate != null ? (
-        <>yes</>
+        <TemplateEditSettings
+          setStep={setStep}
+          title={title}
+          description={description}
+          category={category}
+          price={price}
+          decompressedTemplate={decompressedTemplate}
+          youtubeLink={youtubeLink}
+          fileImagesUpload={fileImagesUpload}
+          templateId={Number(id)}
+          templateVersion={data.results.versions.at(-1).id}
+        />
       ) : (
         <>no template</>
       )}

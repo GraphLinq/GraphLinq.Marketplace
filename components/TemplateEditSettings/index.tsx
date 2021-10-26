@@ -16,50 +16,9 @@ import useContract from 'hooks/useContract'
 import MARKETPLACEABI from 'abis/marketplace.json'
 import { parseUnits } from 'ethers/lib/utils'
 import Router from 'next/router'
+import { TemplateNode, TemplateRoot } from '../TemplateSettings'
 
-export interface TemplateRoot {
-  name: string
-  nodes: TemplateNode[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  comments: any[]
-}
-
-export interface TemplateNode {
-  id: string
-  type: string
-  out_node?: string
-  can_be_executed: boolean
-  can_execute: boolean
-  friendly_name: string
-  block_type: string
-  _x: number
-  _y: number
-  in_parameters: TemplateInParameter[]
-  out_parameters: TemplateOutParameter[]
-}
-
-interface TemplateInParameter {
-  id: string
-  name: string
-  type: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: any
-  assignment: string
-  assignment_node: string
-  value_is_reference: boolean
-}
-
-interface TemplateOutParameter {
-  id: string
-  name: string
-  type: string
-  value?: string
-  assignment: string
-  assignment_node: string
-  value_is_reference: boolean
-}
-
-interface TemplateSettingsProps {
+interface TemplateEditSettingsProps {
   setStep: {
     readonly on: () => void
     readonly off: () => void
@@ -75,6 +34,8 @@ interface TemplateSettingsProps {
     loaded: boolean
     files: File[]
   }
+  templateId: number
+  templateVersion: number
 }
 
 interface APIResponse {
@@ -88,7 +49,9 @@ interface APIError {
   messages: any
 }
 
-export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
+export const TemplateEditSettings: React.FC<TemplateEditSettingsProps> = (
+  props
+) => {
   const [templateData, setTemplateData] = useState<TemplateRoot>(
     props.decompressedTemplate
   )
@@ -129,23 +92,25 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
 
   const [apiResult, setApiResult] = useState<APIResponse>()
 
-  async function publish() {
+  async function update() {
     compressGraph(JSON.stringify(templateData)).then(async (data) => {
-      const result = await TemplateService.publishTemplate({
-        name: props.title,
-        description: props.description,
-        category_id: Number(props.category),
-        price: Number(props.price),
-        data: data,
-        youtube: props.youtubeLink,
-        images: props.fileImagesUpload.files,
-      })
+      const result = await TemplateService.updateTemplate(
+        {
+          name: props.title,
+          description: props.description,
+          category_id: Number(props.category),
+          template_cost: Number(props.price),
+          data: data,
+          version_id: props.templateVersion,
+        },
+        props.templateId
+      )
       setApiResult(result)
       /* @todo visual feedback for user + redirection */
       if (result.success && contract != null) {
         try {
-          const addTx = await contract.addTemplate(
-            result.templateId,
+          const addTx = await contract.updateTemplate(
+            props.templateId,
             parseUnits(props.price),
             1
           )
@@ -160,7 +125,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
           const addTxReceipt = addTx.wait(2)
           toast.closeAll()
           toast({
-            title: 'Template Published',
+            title: 'Template Updated',
             description: (
               <a
                 href={`https://etherscan.io/tx/${addTxReceipt.transactionHash}`}
@@ -175,7 +140,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
             duration: 9000,
             isClosable: true,
           })
-          return Router.replace(`/templates/${result.templateId}`)
+          return Router.replace(`/templates/${props.templateId}`)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
           toast({
@@ -196,7 +161,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
       <Heading size="lg" color="white">
         Edit Template Variables
       </Heading>
-      <Text fontSize="lg">Make it more user-friendly</Text>
+      {!templateData.nodes && <Text>Nothing to edit</Text>}
       {templateData?.nodes
         .filter(
           (node) =>
@@ -246,13 +211,10 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
         >
           Go Back
         </Button>
-        <Button w="50%" size="lg" ml={1} onClick={publish}>
-          Publish Template
+        <Button w="50%" size="lg" ml={1} onClick={update}>
+          Update Template
         </Button>
       </Flex>
-      <Text textColor="whiteAlpha.600" as="i">
-        Fees: 10% of sales will be kept for the Graphlinq Protocol
-      </Text>
     </Stack>
   )
 }
