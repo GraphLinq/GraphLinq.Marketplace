@@ -24,6 +24,9 @@ const Sell: NextPage = () => {
     files: File[]
   }>({ loaded: false, files: [] })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [images, setImages] = useState<any[]>([])
+
   const [compressedTemplate, setCompressedTemplate] = useState<string>()
   const [decompressedTemplate, setDecompressedTemplate] =
     useState<TemplateRoot>({ name: '', nodes: [], comments: [] })
@@ -69,6 +72,8 @@ const Sell: NextPage = () => {
           fileImagesUpload={fileImagesUpload}
           setFileImagesUpload={setFileImagesUpload}
           setCompressedTemplate={setCompressedTemplate}
+          imageArray={images}
+          setImageArray={setImages}
         />
       ) : (
         <TemplateSettings
@@ -79,7 +84,7 @@ const Sell: NextPage = () => {
           price={price}
           decompressedTemplate={decompressedTemplate}
           youtubeLink={youtubeLink}
-          fileImagesUpload={fileImagesUpload}
+          images={images}
         />
       )}
     </Container>

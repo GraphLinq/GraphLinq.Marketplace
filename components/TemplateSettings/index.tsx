@@ -72,10 +72,7 @@ interface TemplateSettingsProps {
   category: string
   decompressedTemplate: TemplateRoot
   youtubeLink: string
-  fileImagesUpload: {
-    loaded: boolean
-    files: File[]
-  }
+  images: string[]
 }
 
 interface APIResponse {
@@ -142,7 +139,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
         price: Number(props.price),
         data: data,
         youtube: props.youtubeLink,
-        images: props.fileImagesUpload.files,
+        images: props.images,
       })
       setApiResult(result)
       /* @todo visual feedback for user + redirection */

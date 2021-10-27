@@ -5,5 +5,5 @@ export default interface PublishRequest {
   price: number
   data: string
   youtube?: string
-  images?: File[]
+  images?: string[]
 }
