@@ -87,6 +87,10 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => props.setDescription(event.target.value)
 
+  const handleYoutubeLinkChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => props.setYoutubeLink(event.target.value)
+
   const inputFileRef = createRef<HTMLInputElement>()
   function onInputClick(event: React.MouseEvent<HTMLInputElement, MouseEvent>) {
     const element = event.target as HTMLInputElement
@@ -148,6 +152,7 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
         template_cost: Number(props.price),
         data: [],
         version_id: props.templateVersion,
+        youtube: props.youtubeLink,
       },
       props.templateId
     )
@@ -293,6 +298,15 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
           placeholder="Template description"
           value={props.description}
           onChange={handleDescriptionChange}
+        />
+      </FormControl>
+      <FormControl id="template-youtube">
+        <FormLabel>Youtube Embed Link</FormLabel>
+        <Input
+          type="text"
+          placeholder="https://www.youtube.com/embed/fuwFbM408Ys"
+          value={props.youtubeLink}
+          onChange={handleYoutubeLinkChange}
         />
       </FormControl>
       {!!error && <Text color="red.400">{error}</Text>}

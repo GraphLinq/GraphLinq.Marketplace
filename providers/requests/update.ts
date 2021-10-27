@@ -6,4 +6,5 @@ export default interface UpdateRequest {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any
   version_id?: number
+  youtube?: string
 }
