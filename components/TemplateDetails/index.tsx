@@ -18,6 +18,8 @@ import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import { TemplateDownloadButton } from '../TemplateDownloadButton'
 import { TemplateBuyButton } from '../TemplateBuyButton'
+import { Carousel } from 'react-responsive-carousel'
+import ReactPlayer from 'react-player'
 
 export const TemplateDetails: React.FC<Templates> = (props) => {
   const safeDescription = DOMPurify.sanitize(props.description, {
@@ -29,7 +31,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
 
   const access = useTemplateAccess(props.id)
 
-  /* const YoutubeSlide = ({
+  const YoutubeSlide = ({
     url,
     isSelected,
   }: {
@@ -60,7 +62,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const customRenderItem = (item: any, props: any) => {
     return <item.type {...item.props} {...props} />
-  } */
+  }
 
   return (
     <>
@@ -77,25 +79,28 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
           alignItems="center"
           justifyContent="center"
         >
-          {/* <Carousel
-            showArrows={true}
-            renderItem={customRenderItem}
-            showStatus={false}
-          >
-            {props.data.images.map((image, i) => (
-              <CarouselSlide
-                type={image.type}
-                key={`slide-${i}`}
-                url={image.imageUrl}
-              />
-            ))}
-          </Carousel> */}
-          <Image
-            src="/images/thumbnail_big.png"
-            alt=""
-            width={500}
-            height={333}
-          />
+          {props.assets ? (
+            <Carousel
+              showArrows={true}
+              renderItem={customRenderItem}
+              showStatus={false}
+            >
+              {props.assets.map((asset, i) => (
+                <CarouselSlide
+                  type={asset.type}
+                  key={`slide-${i}`}
+                  url={asset.data}
+                />
+              ))}
+            </Carousel>
+          ) : (
+            <Image
+              src="/images/thumbnail_big.png"
+              alt=""
+              width={500}
+              height={333}
+            />
+          )}
         </Flex>
         <Flex
           direction="column"
@@ -167,7 +172,6 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
         dangerouslySetInnerHTML={{ __html: safeDescription }}
       ></Flex>
       <Flex mb="1rem">
-        {/* @todo handle download */}
         {access ? (
           <TemplateDownloadButton
             templateId={props.id}

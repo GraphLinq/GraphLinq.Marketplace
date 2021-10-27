@@ -24,14 +24,18 @@ export interface Templates {
   id: number
   name: string
   description: string
-  youtube: string
   template_cost: number
   category: Category
   user?: User
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   likes: any[]
-  images: string[]
+  assets: Asset[]
   versions: Version[]
+}
+
+interface Asset {
+  type: string
+  data: string
 }
 
 interface Category {

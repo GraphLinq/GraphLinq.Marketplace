@@ -29,6 +29,8 @@ import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/image'
 import { TemplateBuyButton } from '../TemplateBuyButton'
 import { TemplateDownloadButton } from '../TemplateDownloadButton'
+import { Carousel } from 'react-responsive-carousel'
+import ReactPlayer from 'react-player'
 
 interface TemplateModalProps {
   user?: User
@@ -56,7 +58,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
 
   const access = useTemplateAccess(props.template.id)
 
-  /*const YoutubeSlide = ({
+  const YoutubeSlide = ({
     url,
     isSelected,
   }: {
@@ -85,7 +87,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const customRenderItem = (item: any, props: any) => {
     return <item.type {...item.props} {...props} />
-  } */
+  }
 
   const infoMotion = {
     rest: { opacity: 0, ease: 'easeOut', duration: 0.2, type: 'tween' },
@@ -137,7 +139,6 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
           bgColor="brand.500"
           height={{ md: 'auto', base: '100vh' }}
         >
-          {/* <ModalHeader bgColor="brand.600" borderTopRadius="md">{props.template.title}</ModalHeader> */}
           <ModalCloseButton color="text.300" />
           <ModalBody p="30px" display="flex" flexDir="column">
             <Flex flexDir="row" flexWrap="wrap" justifyContent="space-between">
@@ -149,25 +150,28 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                 alignItems="center"
                 justifyContent="center"
               >
-                {/* <Carousel
-                  showArrows={true}
-                  renderItem={customRenderItem}
-                  showStatus={false}
-                >
-                  {props.template.images.map((image, i) => (
-                    <CarouselSlide
-                      type={image.type}
-                      key={`slide-${i}`}
-                      url={image.imageUrl}
-                    />
-                  ))}
-                </Carousel> */}
-                <Image
-                  src="/images/thumbnail_big.png"
-                  alt=""
-                  width={500}
-                  height={333}
-                />
+                {props.template.assets ? (
+                  <Carousel
+                    showArrows={true}
+                    renderItem={customRenderItem}
+                    showStatus={false}
+                  >
+                    {props.template.assets.map((asset, i) => (
+                      <CarouselSlide
+                        type={asset.type}
+                        key={`slide-${i}`}
+                        url={asset.data}
+                      />
+                    ))}
+                  </Carousel>
+                ) : (
+                  <Image
+                    src="/images/thumbnail_big.png"
+                    alt=""
+                    width={500}
+                    height={333}
+                  />
+                )}
               </Flex>
               <Flex
                 direction="column"
@@ -233,7 +237,6 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                       <Text color="text.100" fontWeight="500">
                         Latest release date
                       </Text>
-                      {/* <Text>May 21, 2021</Text> */}
                       <Text>
                         {new Intl.DateTimeFormat('en-GB', {
                           dateStyle: 'long',
@@ -257,7 +260,6 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
             ></Flex>
           </ModalBody>
           <ModalFooter>
-            {/* @todo handle download */}
             {access ? (
               <TemplateDownloadButton
                 templateId={props.template.id}
