@@ -150,7 +150,7 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
         description: props.description,
         category_id: Number(props.category),
         template_cost: Number(props.price),
-        data: [],
+        data: '',
         version_id: props.templateVersion,
         youtube: props.youtubeLink,
       },
