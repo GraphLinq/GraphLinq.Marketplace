@@ -31,45 +31,49 @@ export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
   const buyTemplate = async () => {
     if (contractToken != null && contractMarketplace != null) {
       try {
-        await contractToken.allowance(
+        const allowance = await contractToken.allowance(
           account,
           process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT
         )
-        const wei = parseEther('10000000000000000000000000')
-        toast({
-          title: 'Allowance pending',
-          description:
-            'Please allow the use of your token balance for the contract...',
-          position: 'bottom-right',
-          status: 'info',
-          duration: null,
-          isClosable: true,
-        })
-        const approveTx = await contractToken.approve(
-          process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT,
-          wei.toString()
-        )
-        toast({
-          title: 'Pending',
-          description: 'Waiting for confirmations ...',
-          position: 'bottom-right',
-          status: 'info',
-          duration: null,
-          isClosable: true,
-        })
-        await library.waitForTransaction(approveTx.hash, 2)
-        toast.closeAll()
-        toast({
-          title: 'Success',
-          description: 'Contract Approved',
-          position: 'bottom-right',
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-        })
+        if (
+          parseFloat(allowance) < parseFloat(props.templatePrice.toString())
+        ) {
+          const wei = parseEther('10000000000000000000000000')
+          toast({
+            title: 'Allowance pending',
+            description:
+              'Please allow the use of your token balance for the contract...',
+            position: 'bottom-right',
+            status: 'info',
+            duration: null,
+            isClosable: true,
+          })
+          const approveTx = await contractToken.approve(
+            process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT,
+            wei.toString()
+          )
+          toast({
+            title: 'Approving contract',
+            description: 'Waiting for confirmations ...',
+            position: 'bottom-right',
+            status: 'info',
+            duration: null,
+            isClosable: true,
+          })
+          await library.waitForTransaction(approveTx.hash, 2)
+          toast.closeAll()
+          toast({
+            title: 'Success',
+            description: 'Contract Approved',
+            position: 'bottom-right',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+        }
         const buyTx = await contractMarketplace.buyTemplate(props.templateId)
         toast({
-          title: 'Pending',
+          title: 'Buying Template',
           description: 'Waiting for confirmations ...',
           position: 'bottom-right',
           status: 'info',
