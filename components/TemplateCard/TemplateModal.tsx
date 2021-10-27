@@ -78,9 +78,19 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
     url: string
   }) => {
     if (type == 'youtube') {
+      console.log(url)
       return <YoutubeSlide key={key} url={url} />
     } else {
-      return <Image key={key} src={url} alt={'screenshot'} />
+      return (
+        <Image
+          unoptimized
+          key={key}
+          src={url}
+          alt=""
+          width={600}
+          height={360}
+        />
+      )
     }
   }
 

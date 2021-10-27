@@ -55,7 +55,16 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
     if (type == 'youtube') {
       return <YoutubeSlide key={key} url={url} />
     } else {
-      return <Image key={key} src={url} alt={'screenshot'} />
+      return (
+        <Image
+          unoptimized
+          key={key}
+          src={url}
+          alt=""
+          width={600}
+          height={360}
+        />
+      )
     }
   }
 
@@ -84,6 +93,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
               showArrows={true}
               renderItem={customRenderItem}
               showStatus={false}
+              showThumbs={false}
             >
               {props.assets.map((asset, i) => (
                 <CarouselSlide

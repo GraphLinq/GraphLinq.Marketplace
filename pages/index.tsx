@@ -34,6 +34,7 @@ export interface Templates {
 }
 
 interface Asset {
+  id: number
   type: string
   data: string
 }
