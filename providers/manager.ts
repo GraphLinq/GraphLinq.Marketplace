@@ -7,7 +7,7 @@ import { CompressGraphRequest } from './requests/compress'
 import { CompressGraphResponse } from './responses/compress'
 import PublishResponse from './responses/publish'
 import PublishRequest from './requests/publish'
-import UpdateNicknameRequest from './requests/user'
+import UpdateProfileRequest from './requests/user'
 import UpdateNicknameResponse from './responses/user'
 import SubmitOfferRequest from './requests/offer'
 import { SubmitOfferResponse } from './responses/offer'
@@ -173,15 +173,15 @@ export default class ManagerProvider {
     })
   }
 
-  public static updateNickname(
-    publishTemplate: UpdateNicknameRequest,
+  public static updateProfile(
+    profile: UpdateProfileRequest,
     token: string,
     id: number
   ): Promise<UpdateNicknameResponse> {
     return new Promise<UpdateNicknameResponse>((resolve, reject) => {
       fetch(`${this.baseUrl}/users/${id}/profile`, {
         method: 'put',
-        body: JSON.stringify(publishTemplate),
+        body: JSON.stringify(profile),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

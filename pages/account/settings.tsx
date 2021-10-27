@@ -1,7 +1,9 @@
 import type { NextPage } from 'next'
 import {
   Button,
+  Center,
   Container,
+  createStandaloneToast,
   Flex,
   FormControl,
   FormLabel,
@@ -10,39 +12,69 @@ import {
   Input,
   Stack,
   Text,
+  Spinner,
   useBreakpointValue,
 } from '@chakra-ui/react'
 import React, { createRef, useState } from 'react'
 import { UserAvatar } from '@/components/UserAvatar'
 import { HiUpload } from 'react-icons/hi'
 import UserService from 'services/userService'
+import { useRouter } from 'next/router'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const Settings: NextPage = () => {
-  const [nickName, setNickname] = useState('')
-  const userAvatar = ''
+  let session
+  if (typeof window !== 'undefined') {
+    session = JSON.parse(localStorage.getItem('session') as string)
+  }
+
+  const { data, error } = useSWR(
+    session.account_id
+      ? `${process.env.NEXT_PUBLIC_MANAGER_URL}/users/${session.account_id}`
+      : null,
+    session.account_id ? fetcher : null
+  )
+
+  const [nickName, setNickname] = useState<string>(data.name)
   const [fileUpload, setFileUpload] = useState({
     loaded: false,
     file: {},
     preview: '',
   })
+
+  const [fileDataUrl, setFileDataUrl] = useState<string | ArrayBuffer | null>(
+    ''
+  )
+
   const inputFileRef = createRef<HTMLInputElement>()
 
   const handleNicknameChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setNickname(event.target.value)
 
+  const router = useRouter()
+  const toast = createStandaloneToast()
+
   async function updateProfile() {
     try {
-      if (nickName != '') {
-        /** @todo try/catch && toast notification feedback */
-        const result = await UserService.updateNickname({ name: nickName })
-        if (result) {
-          console.log('nickname updated')
-        } else {
-          console.log(result)
-        }
-      }
-      if (fileUpload.preview != '') {
-        console.log('avatar set')
+      console.log({
+        name: nickName,
+        picture: fileDataUrl,
+      })
+      const result = await UserService.updateProfile({
+        name: nickName,
+        picture: fileDataUrl,
+      })
+      if (result) {
+        toast({
+          title: 'Profile Updated',
+          position: 'bottom-right',
+          status: 'info',
+          duration: 9000,
+          isClosable: true,
+        })
+        router.push(`/`)
       }
     } catch (error) {
       console.log('error: ', error)
@@ -51,6 +83,12 @@ const Settings: NextPage = () => {
 
   async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
+      const reader = new FileReader()
+      reader.readAsDataURL(e.target.files[0])
+      reader.onload = () => {
+        console.log(reader.result)
+        setFileDataUrl(reader.result)
+      }
       setFileUpload({
         loaded: true,
         file: e.target.files[0],
@@ -64,6 +102,18 @@ const Settings: NextPage = () => {
     element.value = ''
   }
 
+  if (error) return <Text>An error has occurred.</Text>
+  if (!data)
+    return (
+      <Center w="full" h={96} alignContent="center">
+        <Spinner
+          thickness="4px"
+          size="lg"
+          color="gray.300"
+          emptyColor="gray.500"
+        />
+      </Center>
+    )
   return (
     <Container
       maxW={['container.sm', 'container.md', 'container.xl']}
@@ -91,12 +141,11 @@ const Settings: NextPage = () => {
             <UserAvatar
               name={''}
               size="xl"
-              src={fileUpload.preview || nickName || userAvatar}
+              src={fileUpload.preview || nickName}
             />
             <Button
               htmlFor="files"
               ml={6}
-              disabled
               leftIcon={<Icon as={HiUpload} />}
               onClick={() => {
                 inputFileRef.current?.click()
@@ -109,6 +158,7 @@ const Settings: NextPage = () => {
         <FormControl id="display-name">
           <FormLabel>Display name</FormLabel>
           <Input
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             size={useBreakpointValue(['sm', 'lg'])}
             type="text"
             placeholder="Enter your display name"

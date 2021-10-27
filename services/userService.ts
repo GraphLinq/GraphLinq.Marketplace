@@ -1,15 +1,15 @@
 import ManagerProvider from 'providers/manager'
-import UpdateNicknameRequest from 'providers/requests/user'
+import UpdateProfileRequest from 'providers/requests/user'
 import BasicResponse from 'providers/responses/basic'
 
 export default class UserService {
-  public static async updateNickname(
-    nickname: UpdateNicknameRequest
+  public static async updateProfile(
+    profile: UpdateProfileRequest
   ): Promise<boolean> {
     try {
       const session = JSON.parse(localStorage.getItem('session') as string)
-      const result: BasicResponse = await ManagerProvider.updateNickname(
-        nickname,
+      const result: BasicResponse = await ManagerProvider.updateProfile(
+        profile,
         session.token,
         session.account_id
       )
