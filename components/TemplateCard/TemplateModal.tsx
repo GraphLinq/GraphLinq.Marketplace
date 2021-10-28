@@ -147,7 +147,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                 h={['auto', '360px']}
                 bgColor="brand.700"
                 borderRadius="md"
-                alignItems="center"
+                alignItems="flex-start"
                 justifyContent="center"
               >
                 {props.template.assets.length == 0 ? (
