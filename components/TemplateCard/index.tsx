@@ -186,7 +186,9 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
           <Text fontSize="md">
             {/* {props.template.price.isFree ? 'FREE' : props.template.price.price + ' GLQ'} */}
             {/* {props.template.template_cost + ' GLQ'} */}
-            {templatePrice} GLQ
+            {templatePrice == '0.0'
+              ? props.template.template_cost + ' GLQ'
+              : templatePrice + ' GLQ'}
           </Text>
         </LinkBox>
       </Flex>

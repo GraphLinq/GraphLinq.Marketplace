@@ -212,7 +212,9 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                     </Flex>
                   </Box>
                   <Box fontSize="2xl" fontWeight="bold">
-                    {templatePrice} GLQ
+                    {templatePrice == '0.0'
+                      ? props.template.template_cost + ' GLQ'
+                      : templatePrice + ' GLQ'}
                   </Box>
                   <VStack spacing={3} align="stretch" mt="20px">
                     {/* <Flex justifyContent="space-between">

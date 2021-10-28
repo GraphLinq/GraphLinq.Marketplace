@@ -132,7 +132,9 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
               </Flex>
             </Box>
             <Text fontSize={['xl', '2xl']} fontWeight="bold">
-              {templatePrice} GLQ
+              {templatePrice == '0.0'
+                ? props.template_cost + ' GLQ'
+                : templatePrice + ' GLQ'}
             </Text>
             <VStack spacing={3} align="stretch" mt="20px">
               {/* <Flex justifyContent="space-between">
