@@ -39,7 +39,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
     isSelected?: boolean
   }) => {
     return (
-      <ReactPlayer width="100%" height="100%" url={url} playing={isSelected} />
+      <ReactPlayer width="auto" height="360px" url={url} playing={isSelected} />
     )
   }
 
@@ -76,7 +76,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
           h={['auto', '360px']}
           bgColor="brand.900"
           borderRadius="md"
-          alignItems="center"
+          alignItems="flex-start"
           justifyContent="center"
         >
           {props.assets.length == 0 ? (
@@ -91,8 +91,6 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
               showArrows={true}
               renderItem={customRenderItem}
               showStatus={false}
-              width={600}
-              dynamicHeight={false}
             >
               {props.assets.map((asset, i) => (
                 <CarouselSlide
