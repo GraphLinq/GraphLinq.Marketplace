@@ -10,7 +10,7 @@ import {
 import TemplateCard from '@/components/TemplateCard'
 import useSWR from 'swr'
 import { useRouter } from 'next/router'
-import { Templates } from 'pages'
+import { Templates } from '@/constants/template'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 

@@ -21,7 +21,7 @@ import { HiEye } from 'react-icons/hi'
 import MotionBox from '@/components/MotionBox'
 import DOMPurify from 'isomorphic-dompurify'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { Templates } from 'pages'
+import { Templates } from '@/constants/template'
 import NextLink from 'next/link'
 import { shortenAddress } from 'utils'
 import { useTemplateAccess, useTemplatePrice } from 'hooks/wallet'
@@ -101,6 +101,8 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
     },
   }
 
+  console.log(props.template.assets)
+
   return (
     <>
       <MotionBox
@@ -150,7 +152,14 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                 alignItems="center"
                 justifyContent="center"
               >
-                {props.template.assets !== [] ? (
+                {props.template.assets.length == 0 ? (
+                  <Image
+                    src="/images/thumbnail_big.png"
+                    alt=""
+                    width={500}
+                    height={333}
+                  />
+                ) : (
                   <Carousel
                     showArrows={true}
                     renderItem={customRenderItem}
@@ -166,13 +175,6 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                       />
                     ))}
                   </Carousel>
-                ) : (
-                  <Image
-                    src="/images/thumbnail_big.png"
-                    alt=""
-                    width={500}
-                    height={333}
-                  />
                 )}
               </Flex>
               <Flex

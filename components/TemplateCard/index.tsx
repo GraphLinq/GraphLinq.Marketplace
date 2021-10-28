@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import MotionLink from '@/components/MotionLink'
 import { TemplateModal } from './TemplateModal'
-import { Templates } from 'pages'
+import { Templates } from '@/constants/template'
 import NextLink from 'next/link'
 import { shortenAddress } from 'utils'
 import { useTemplatePrice } from 'hooks/wallet'

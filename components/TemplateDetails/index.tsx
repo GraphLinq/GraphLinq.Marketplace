@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import DOMPurify from 'isomorphic-dompurify'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { Templates } from 'pages'
+import { Templates } from '@/constants/template'
 import NextLink from 'next/link'
 import { shortenAddress } from 'utils'
 import { useTemplateAccess, useTemplatePrice } from 'hooks/wallet'
@@ -79,12 +79,20 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
           alignItems="center"
           justifyContent="center"
         >
-          {props.assets ? (
+          {props.assets.length == 0 ? (
+            <Image
+              src="/images/thumbnail_big.png"
+              alt=""
+              width={500}
+              height={333}
+            />
+          ) : (
             <Carousel
               showArrows={true}
               renderItem={customRenderItem}
               showStatus={false}
-              showThumbs={false}
+              width={600}
+              dynamicHeight={false}
             >
               {props.assets.map((asset, i) => (
                 <CarouselSlide
@@ -94,13 +102,6 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
                 />
               ))}
             </Carousel>
-          ) : (
-            <Image
-              src="/images/thumbnail_big.png"
-              alt=""
-              width={500}
-              height={333}
-            />
           )}
         </Flex>
         <Flex

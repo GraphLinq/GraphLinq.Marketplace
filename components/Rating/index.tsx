@@ -2,13 +2,13 @@ import React from 'react'
 import { StarIcon } from '@chakra-ui/icons'
 import { Text, Stack, Flex, Divider, Icon } from '@chakra-ui/react'
 import { FaHeart } from 'react-icons/fa'
-import { TemplateCardProps } from 'constants/template'
+import { Templates } from '@/constants/template'
 
 /* interface TemplateRatingProps {
 
 } */
 
-export const Rating: React.FC<TemplateCardProps> = (props) => {
+export const Rating: React.FC<Templates> = (props) => {
   return (
     <Stack direction="row" h="24px" color="text.200">
       {/* Star Rating */}

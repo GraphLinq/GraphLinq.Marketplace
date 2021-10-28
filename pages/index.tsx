@@ -19,49 +19,7 @@ import { HiOutlineAdjustments } from 'react-icons/hi'
 import TemplateCard from '@/components/TemplateCard'
 import useSWR from 'swr'
 import { useState } from 'react'
-
-export interface Templates {
-  id: number
-  name: string
-  description: string
-  template_cost: number
-  category: Category
-  user?: User
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  likes: any[]
-  assets: Asset[]
-  versions: Version[]
-}
-
-interface Asset {
-  id: number
-  type: string
-  data: string
-}
-
-interface Category {
-  id: number
-  name: string
-  long_name: string
-  slug: string
-}
-
-interface User {
-  id: number
-  name: string
-  email: string
-  publisherName: string
-  publicAddress: string
-  is_admin: boolean
-}
-
-interface Version {
-  id: number
-  current_version: string
-  execution_cost: string
-  createdAt: string
-  updatedAt: string
-}
+import { Templates } from '@/constants/template'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 const PAGE_SIZE = 24

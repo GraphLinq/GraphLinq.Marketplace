@@ -62,7 +62,7 @@ export const CATEGORY_INFO: CategoryInfos = {
   },
 }
 
-export interface TemplateCardProps {
+/* export interface TemplateCardProps {
   templateId: number
   templateThumbnail: string
   images: Images[]
@@ -99,6 +99,56 @@ interface Category {
 interface Price {
   price: number
   isFree: boolean
+}
+
+interface Rating {
+  average: number
+  count: number
+} */
+
+export interface Templates {
+  id: number
+  name: string
+  description: string
+  template_cost: number
+  category: Category
+  user?: User
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  likes: any[]
+  assets: Asset[]
+  versions: Version[]
+  rating: Rating
+  favoriteCount: number
+}
+
+interface Asset {
+  id: number
+  type: string
+  data: string
+}
+
+interface Category {
+  id: number
+  name: string
+  long_name: string
+  slug: string
+}
+
+interface User {
+  id: number
+  name: string
+  email: string
+  publisherName: string
+  publicAddress: string
+  is_admin: boolean
+}
+
+interface Version {
+  id: number
+  current_version: string
+  execution_cost: string
+  createdAt: string
+  updatedAt: string
 }
 
 interface Rating {

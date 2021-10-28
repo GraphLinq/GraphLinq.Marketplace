@@ -1,6 +1,6 @@
 import React from 'react'
 import TemplateCard from '../TemplateCard'
-import { Templates } from 'pages'
+import { Templates } from '@/constants/template'
 import useSWR from 'swr'
 import { Flex, Text } from '@chakra-ui/react'
 
