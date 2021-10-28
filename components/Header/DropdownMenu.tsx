@@ -55,11 +55,11 @@ export const DropdownMenu: React.FC = () => {
     userFetcher
   )
 
-  const userAvatar = ''
   const { hasCopied, onCopy } = useClipboard(account || '')
 
   if (error) return <Text>An error has occurred.</Text>
-  if (!data) return <Spinner size="md" color="gray.300" emptyColor="gray.500" />
+  if (!data && !user)
+    return <Spinner size="md" color="gray.300" emptyColor="gray.500" />
   return (
     <Menu autoSelect={false} isLazy>
       <MenuButton
@@ -72,7 +72,7 @@ export const DropdownMenu: React.FC = () => {
               bgColor="text.300"
               color="text.50"
               name={''}
-              src={userAvatar}
+              src={(user && user.picture) || ''}
             />
           </>
         }

@@ -61,7 +61,6 @@ const UserProfile: NextPage = () => {
         bgSize="cover"
         bgPosition="center center"
         //bg={`url('${userBanner}')`}
-        //bg={`url('${userBanner}')`}
         position="relative"
       >
         <Flex
@@ -72,7 +71,7 @@ const UserProfile: NextPage = () => {
           position="absolute"
           boxSize="128px"
         >
-          <UserAvatar name={''} src="" />
+          <UserAvatar name={''} src={data.picture} />
         </Flex>
       </Flex>
       <Container
