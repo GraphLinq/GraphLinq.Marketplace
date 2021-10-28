@@ -9,6 +9,15 @@ export const SearchBar = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setValue(event.target.value)
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function doSearch(e: any) {
+    if (value == '') {
+      e.key === 'Enter' && router.push('/')
+    } else {
+      e.key === 'Enter' && router.push(`/search/${value}`)
+    }
+  }
+
   return (
     <Container
       display="flex"
@@ -28,9 +37,7 @@ export const SearchBar = () => {
           variant="filled"
           value={value}
           onChange={(e) => handleChange(e)}
-          onKeyPress={(e) =>
-            e.key === 'Enter' && router.push(`/search/${value}`)
-          }
+          onKeyPress={(e) => doSearch(e)}
         />
         <Box
           display="flex"
