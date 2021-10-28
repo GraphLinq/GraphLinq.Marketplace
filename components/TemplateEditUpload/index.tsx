@@ -22,6 +22,7 @@ import useContract from 'hooks/useContract'
 import MARKETPLACEABI from 'abis/marketplace.json'
 import { parseUnits } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
+import { CHAIN_INFO } from '@/constants/chains'
 
 interface TemplateEditUploadProps {
   setStep: {
@@ -133,8 +134,11 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
     }
   }
 
-  const { library } = useWeb3React()
+  const { library, chainId } = useWeb3React()
   const router = useRouter()
+
+  let explorer: string
+  if (chainId) explorer = CHAIN_INFO[chainId].explorer
 
   const contract = useContract(
     process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT || '',
@@ -176,7 +180,7 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
         title: 'Template Updated',
         description: (
           <a
-            href={`https://etherscan.io/tx/${updateTxReceipt.transactionHash}`}
+            href={`${explorer}tx/${updateTxReceipt.transactionHash}`}
             target="_blank"
             rel="noreferrer"
           >

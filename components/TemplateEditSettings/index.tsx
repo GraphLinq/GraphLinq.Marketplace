@@ -18,6 +18,7 @@ import { parseUnits } from 'ethers/lib/utils'
 import { useRouter } from 'next/router'
 import { TemplateNode, TemplateRoot } from '../TemplateSettings'
 import { useWeb3React } from '@web3-react/core'
+import { CHAIN_INFO } from '@/constants/chains'
 
 interface TemplateEditSettingsProps {
   setStep: {
@@ -84,7 +85,7 @@ export const TemplateEditSettings: React.FC<TemplateEditSettingsProps> = (
     return compData
   }
 
-  const { library } = useWeb3React()
+  const { library, chainId } = useWeb3React()
   const router = useRouter()
 
   const contract = useContract(
@@ -95,6 +96,9 @@ export const TemplateEditSettings: React.FC<TemplateEditSettingsProps> = (
   const toast = createStandaloneToast()
 
   const [apiResult, setApiResult] = useState<APIResponse>()
+
+  let explorer: string
+  if (chainId) explorer = CHAIN_INFO[chainId].explorer
 
   async function update() {
     compressGraph(JSON.stringify(templateData)).then(async (data) => {
@@ -132,7 +136,7 @@ export const TemplateEditSettings: React.FC<TemplateEditSettingsProps> = (
             title: 'Template Updated',
             description: (
               <a
-                href={`https://etherscan.io/tx/${addTxReceipt.transactionHash}`}
+                href={`${explorer}tx/${addTxReceipt.transactionHash}`}
                 target="_blank"
                 rel="noreferrer"
               >

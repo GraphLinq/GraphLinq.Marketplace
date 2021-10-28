@@ -7,6 +7,7 @@ import TemplateService from 'services/templateService'
 import MARKETPLACEABI from 'abis/marketplace.json'
 import ERC20ABI from 'abis/erc20.json'
 import { useRouter } from 'next/router'
+import { CHAIN_INFO } from '@/constants/chains'
 
 interface TemplateBuyButtonProps {
   templateId: number
@@ -16,7 +17,7 @@ interface TemplateBuyButtonProps {
 export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
   const toast = createStandaloneToast()
 
-  const { account, library } = useWeb3React()
+  const { account, library, chainId } = useWeb3React()
   const router = useRouter()
 
   const contractToken = useContract(
@@ -27,6 +28,9 @@ export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
     process.env.NEXT_PUBLIC_GRAPHLINQ_MARKETPLACE_CONTRACT || '',
     MARKETPLACEABI
   )
+
+  let explorer: string
+  if (chainId) explorer = CHAIN_INFO[chainId].explorer
 
   const buyTemplate = async () => {
     if (contractToken != null && contractMarketplace != null) {
@@ -87,7 +91,7 @@ export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
           title: 'Template Purchased',
           description: (
             <a
-              href={`https://etherscan.io/tx/${buyTxReceipt.transactionHash}`}
+              href={`${explorer}tx/${buyTxReceipt.transactionHash}`}
               target="_blank"
               rel="noreferrer"
             >

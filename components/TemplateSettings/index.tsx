@@ -17,6 +17,7 @@ import MARKETPLACEABI from 'abis/marketplace.json'
 import { parseUnits } from 'ethers/lib/utils'
 import { useRouter } from 'next/router'
 import { useWeb3React } from '@web3-react/core'
+import { CHAIN_INFO } from '@/constants/chains'
 
 export interface TemplateRoot {
   name: string
@@ -118,7 +119,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
     return compData
   }
 
-  const { library } = useWeb3React()
+  const { library, chainId } = useWeb3React()
   const router = useRouter()
 
   const contract = useContract(
@@ -129,6 +130,9 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
   const toast = createStandaloneToast()
 
   const [apiResult, setApiResult] = useState<APIResponse>()
+
+  let explorer: string
+  if (chainId) explorer = CHAIN_INFO[chainId].explorer
 
   async function publish() {
     compressGraph(JSON.stringify(templateData)).then(async (data) => {
@@ -158,14 +162,13 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
             duration: null,
             isClosable: false,
           })
-          //const addTxReceipt = addTx.wait(2)
           const addTxReceipt = await library.waitForTransaction(addTx.hash, 2)
           toast.closeAll()
           toast({
             title: 'Template Published',
             description: (
               <a
-                href={`https://etherscan.io/tx/${addTxReceipt.transactionHash}`}
+                href={`${explorer}tx/${addTxReceipt.transactionHash}`}
                 target="_blank"
                 rel="noreferrer"
               >
