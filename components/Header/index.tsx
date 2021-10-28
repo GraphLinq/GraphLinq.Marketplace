@@ -16,6 +16,9 @@ import {
   Flex,
   VStack,
   Heading,
+  Alert,
+  AlertIcon,
+  AlertTitle,
 } from '@chakra-ui/react'
 import { HiMenu } from 'react-icons/hi'
 import { Logo } from '../Logo'
@@ -23,9 +26,12 @@ import NextLink from 'next/link'
 import { DropdownMenu } from './DropdownMenu'
 import { useWeb3React } from '@web3-react/core'
 import { SearchBar } from '../SearchBar'
+import { CHAIN_INFO } from '@/constants/chains'
 
 export const Header: React.FC = ({}) => {
-  const { account } = useWeb3React()
+  const { account, chainId } = useWeb3React()
+
+  const defaultChain = Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID)
 
   return (
     <Box bgColor="brand.500" color="white" as="header">
@@ -44,6 +50,16 @@ export const Header: React.FC = ({}) => {
           </Link>
         </NextLink>
 
+        {chainId && chainId !== defaultChain && (
+          <Box mx="auto">
+            <Alert status="error" rounded="full">
+              <AlertIcon />
+              <AlertTitle mr={2}>Network not supported !</AlertTitle>
+              Please switch to : {CHAIN_INFO[defaultChain].label} and refresh
+              this page
+            </Alert>
+          </Box>
+        )}
         <Flex alignItems="center">
           <Box display={['none', 'flex']} mr="1rem">
             <NextLink href="/offers" passHref>

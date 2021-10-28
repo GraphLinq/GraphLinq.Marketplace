@@ -6,6 +6,8 @@ export enum SupportedChainId {
   RINKEBY = 4,
   GOERLI = 5,
   KOVAN = 42,
+  POLYGON_MAINNET = 137,
+  POLYGON_MUMBAI = 80001,
 }
 
 export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
@@ -14,6 +16,8 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
+  SupportedChainId.POLYGON_MAINNET,
+  SupportedChainId.POLYGON_MUMBAI,
 ]
 
 export const L1_CHAIN_IDS = [
@@ -22,6 +26,8 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.RINKEBY,
   SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
+  SupportedChainId.POLYGON_MAINNET,
+  SupportedChainId.POLYGON_MUMBAI,
 ] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
@@ -69,5 +75,15 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://goerli.etherscan.io/',
     label: 'Görli',
     nativeCurrency: { name: 'Görli ETH', symbol: 'görETH', decimals: 18 },
+  },
+  [SupportedChainId.POLYGON_MAINNET]: {
+    explorer: 'https://polygonscan.com/',
+    label: 'Polygon Mainnet',
+    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+  },
+  [SupportedChainId.POLYGON_MUMBAI]: {
+    explorer: 'https://mumbai.polygonscan.com/',
+    label: 'Polygon Testnet Mumbai',
+    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
   },
 }
