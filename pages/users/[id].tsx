@@ -42,7 +42,8 @@ const UserProfile: NextPage = () => {
   if (typeof window !== 'undefined')
     session = JSON.parse(localStorage.getItem('session') as string)
 
-  //const userBanner = 'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
+  const userBanner =
+    'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
 
   if (error)
     return (
@@ -69,7 +70,7 @@ const UserProfile: NextPage = () => {
         bgColor="rgba(5, 5, 5, 0.2)"
         bgSize="cover"
         bgPosition="center center"
-        //bg={`url('${userBanner}')`}
+        bg={`url('${userBanner}')`}
         position="relative"
       >
         <Flex
