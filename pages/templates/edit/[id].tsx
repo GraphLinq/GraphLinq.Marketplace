@@ -2,6 +2,8 @@ import { TemplateRoot } from '@/components/TemplateSettings'
 import { TemplateEditUpload } from '@/components/TemplateEditUpload'
 import {
   Heading,
+  Box,
+  Link,
   Container,
   Center,
   Spinner,
@@ -69,7 +71,13 @@ const TemplateEdit: React.FC = ({}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [compressedTemplate])
 
-  if (error) return <>An error has occurred.</>
+  if (error)
+    return (
+      <Box textAlign="center" mt="8">
+        <Heading>Error</Heading>
+        <Link href="/">Go back to home page</Link>
+      </Box>
+    )
   if (!data)
     return (
       <Center w="full" h={96} alignContent="center">

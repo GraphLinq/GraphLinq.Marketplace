@@ -6,6 +6,8 @@ import {
   StackDivider,
   Center,
   Spinner,
+  Box,
+  Link,
 } from '@chakra-ui/react'
 import useSWR from 'swr'
 import { OfferCard, OfferCardProps } from '@/components/OfferCard'
@@ -18,7 +20,13 @@ const OfferPage: React.FC = ({}) => {
     fetcher
   )
 
-  if (error) return <>An error has occurred.</>
+  if (error)
+    return (
+      <Box textAlign="center" mt="8">
+        <Heading>Error</Heading>
+        <Link href="/">Go back to home page</Link>
+      </Box>
+    )
   if (!data)
     return (
       <Center w="full" h={96} alignContent="center">

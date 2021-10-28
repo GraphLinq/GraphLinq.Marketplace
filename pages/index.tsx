@@ -2,11 +2,13 @@ import type { NextPage } from 'next'
 import {
   Container,
   Heading,
+  Box,
   Flex,
   Button,
   Menu,
   MenuButton,
   MenuList,
+  Link,
   MenuOptionGroup,
   MenuItemOption,
   Icon,
@@ -49,7 +51,13 @@ const Home: NextPage = () => {
     console.log('loaded more')
   }
 
-  if (error) return <>An error has occurred.</>
+  if (error)
+    return (
+      <Box textAlign="center" mt="8">
+        <Heading>Error</Heading>
+        <Link href="/">Go back to home page</Link>
+      </Box>
+    )
   if (!data)
     return (
       <Center w="full" h={96} alignContent="center">

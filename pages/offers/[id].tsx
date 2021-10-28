@@ -10,6 +10,7 @@ import {
   chakra,
   Center,
   Spinner,
+  Link,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
@@ -26,7 +27,13 @@ const OfferPage: React.FC = ({}) => {
     id ? fetcher : null
   )
 
-  if (error) return <>An error has occurred.</>
+  if (error)
+    return (
+      <Box textAlign="center" mt="8">
+        <Heading>Error</Heading>
+        <Link href="/">Go back to home page</Link>
+      </Box>
+    )
   if (!data)
     return (
       <Center w="full" h={96} alignContent="center">

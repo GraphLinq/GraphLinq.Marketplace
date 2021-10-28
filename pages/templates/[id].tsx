@@ -28,7 +28,13 @@ const TemplatePage: React.FC = ({}) => {
   )
   const { account } = useWeb3React()
 
-  if (error) return <>An error has occurred.</>
+  if (error)
+    return (
+      <Box textAlign="center" mt="8">
+        <Heading>Error</Heading>
+        <Link href="/">Go back to home page</Link>
+      </Box>
+    )
   if (!data)
     return (
       <Center w="full" h={96} alignContent="center">

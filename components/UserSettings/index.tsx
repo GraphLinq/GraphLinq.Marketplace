@@ -7,9 +7,11 @@ import {
   FormLabel,
   Icon,
   Input,
-  Text,
   Spinner,
   createStandaloneToast,
+  Box,
+  Heading,
+  Link,
 } from '@chakra-ui/react'
 import { UserAvatar } from '@/components/UserAvatar'
 import { HiUpload } from 'react-icons/hi'
@@ -101,7 +103,13 @@ export const UserSettings: React.FC = () => {
     element.value = ''
   }
 
-  if (error) return <Text>An error has occurred.</Text>
+  if (error)
+    return (
+      <Box textAlign="center" mt="8">
+        <Heading>Error</Heading>
+        <Link href="/">Go back to home page</Link>
+      </Box>
+    )
   if (!data)
     return (
       <Center w="full" h={96} alignContent="center">

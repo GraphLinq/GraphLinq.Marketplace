@@ -2,6 +2,9 @@ import type { NextPage } from 'next'
 import {
   Container,
   Flex,
+  Box,
+  Heading,
+  Link,
   VStack,
   Text,
   Tab,
@@ -41,7 +44,13 @@ const UserProfile: NextPage = () => {
 
   //const userBanner = 'https://ethereum.org/static/28214bb68eb5445dcb063a72535bc90c/3bf79/hero.png'
 
-  if (error) return <Text>An error has occurred.</Text>
+  if (error)
+    return (
+      <Box textAlign="center" mt="8">
+        <Heading>Error</Heading>
+        <Link href="/">Go back to home page</Link>
+      </Box>
+    )
   if (!data)
     return (
       <Center w="full" h={96} alignContent="center">
