@@ -7,6 +7,8 @@ import {
   Box,
   Center,
   Spinner,
+  Link,
+  Heading,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
@@ -38,6 +40,13 @@ const TemplatePage: React.FC = ({}) => {
         />
       </Center>
     )
+  if (!data.results)
+    return (
+      <Center w="full" h={96} alignContent="center" flexDir="column">
+        <Heading>Template not found</Heading>
+        <Link href="/">Go back to home page</Link>
+      </Center>
+    )
   return (
     <Container
       mt="3.5rem"
@@ -47,7 +56,6 @@ const TemplatePage: React.FC = ({}) => {
     >
       <Flex p={[0, 6]} flexDir="column" justifyContent="start">
         <Box placeSelf="end" p={[0, 6]}>
-          {/* button edit owner only */}
           {data.results.user.publicAddress == account && (
             <NextLink href={`/templates/edit/${data.results.id}`}>
               <Button size="md" leftIcon={<Icon as={FaCog} />}>
