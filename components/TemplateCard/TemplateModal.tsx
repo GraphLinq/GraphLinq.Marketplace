@@ -78,7 +78,6 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
     url: string
   }) => {
     if (type == 'youtube') {
-      console.log(url)
       return <YoutubeSlide key={key} url={url} />
     } else {
       return <Image key={key} src={url} alt="" width={600} height={360} />
@@ -151,11 +150,13 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                 alignItems="center"
                 justifyContent="center"
               >
-                {props.template.assets ? (
+                {props.template.assets !== [] ? (
                   <Carousel
                     showArrows={true}
                     renderItem={customRenderItem}
                     showStatus={false}
+                    width={600}
+                    dynamicHeight={false}
                   >
                     {props.template.assets.map((asset, i) => (
                       <CarouselSlide

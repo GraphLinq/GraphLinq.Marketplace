@@ -15,7 +15,7 @@ import {
   Spinner,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import React, { createRef, useState } from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 import { UserAvatar } from '@/components/UserAvatar'
 import { HiUpload } from 'react-icons/hi'
 import UserService from 'services/userService'
@@ -24,20 +24,26 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-const Settings: NextPage = () => {
-  let session
-  if (typeof window !== 'undefined') {
-    session = JSON.parse(localStorage.getItem('session') as string)
-  }
+interface UserSession {
+  account_id?: number
+  addr?: string
+  token?: string
+}
 
+const Settings: NextPage = () => {
+  const session: UserSession = JSON.parse(
+    localStorage.getItem('session') as string
+  )
   const { data, error } = useSWR(
-    session.account_id
-      ? `${process.env.NEXT_PUBLIC_MANAGER_URL}/users/${session.account_id}`
-      : null,
-    session.account_id ? fetcher : null
+    `${process.env.NEXT_PUBLIC_MANAGER_URL}/users/${session.account_id}`,
+    fetcher
   )
 
-  const [nickName, setNickname] = useState<string>(data.name)
+  const [nickName, setNickname] = useState<string>('')
+  useEffect(() => {
+    setNickname(data.name)
+  }, [data.name])
+
   const [fileUpload, setFileUpload] = useState({
     loaded: false,
     file: {},
@@ -141,7 +147,7 @@ const Settings: NextPage = () => {
             <UserAvatar
               name={''}
               size="xl"
-              src={fileUpload.preview || nickName}
+              src={fileUpload.preview || data.picture || nickName}
             />
             <Button
               htmlFor="files"
