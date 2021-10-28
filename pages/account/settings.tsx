@@ -41,7 +41,9 @@ const Settings: NextPage = () => {
 
   const [nickName, setNickname] = useState<string>('')
   useEffect(() => {
-    setNickname(data.name)
+    if (data.name != null) {
+      setNickname(data.name)
+    }
   }, [data.name])
 
   const [fileUpload, setFileUpload] = useState({

@@ -121,7 +121,7 @@ export interface Templates {
   favoriteCount: number
 }
 
-interface Asset {
+export interface Asset {
   id: number
   type: string
   data: string

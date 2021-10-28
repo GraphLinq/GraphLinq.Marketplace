@@ -101,8 +101,6 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
     },
   }
 
-  console.log(props.template.assets)
-
   return (
     <>
       <MotionBox

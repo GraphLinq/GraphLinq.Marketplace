@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import MotionLink from '@/components/MotionLink'
 import { TemplateModal } from './TemplateModal'
-import { Templates } from '@/constants/template'
+import { Asset, Templates } from '@/constants/template'
 import NextLink from 'next/link'
 import { shortenAddress } from 'utils'
 import { useTemplatePrice } from 'hooks/wallet'
@@ -36,6 +36,80 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
   const price = useTemplatePrice(props.template.id)
   const templatePrice = formatUnits(price)
 
+  const [thumbnail, setThumbnail] = React.useState<Asset[]>()
+
+  React.useEffect(() => {
+    if (props.template.assets.length !== 0) {
+      setThumbnail(
+        props.template.assets.filter((asset) => asset.type == 'image')
+      )
+    }
+  }, [props.template.assets])
+
+  const Thumbnail = () => {
+    if (thumbnail && thumbnail.length !== 0) {
+      return (
+        <Box
+          bgImage={`url(${thumbnail[0].data})`}
+          bgSize="100% 100%"
+          bgPos="center top"
+          w="full"
+          h="full"
+        />
+      )
+    } else {
+      return (
+        <Box
+          bgImage={`url("/images/thumbnail_small.png")`}
+          bgSize="100% 100%"
+          bgPos="center top"
+          w="full"
+          h="full"
+        />
+      )
+    }
+  }
+  /* const Thumbnail = () => {
+    if (props.template.assets.length !== 0) {
+      const image = props.template.assets.filter(
+        (asset) => asset.type == 'image'
+      )[0].data
+      return (
+        <Box
+          bgImage={`url(${thumbnail})`}
+          bgSize="100% 100%"
+          bgPos="center top"
+          w="full"
+          h="full"
+        />
+      )
+    } else {
+      return (
+        <Box
+          bgImage={`url(${thumbnail})`}
+          bgSize="100% 100%"
+          bgPos="center top"
+          w="full"
+          h="full"
+        />
+      )
+    }
+  } */
+
+  //const thumbnail = async () => await getThumbnail()
+
+  /*  React.useEffect(() => {
+    if (props.template.assets && props.template.assets.length != 0) {
+      const image = props.template.assets.filter(
+        (asset) => asset.type == 'image'
+      )
+      console.log(image[0].data)
+      setThumbnail(image[0].data)
+    } else {
+      setThumbnail('"/images/thumbnail_small.png"')
+    }
+  }, [props.template.assets]) */
+
   return (
     <Box
       w="full"
@@ -54,14 +128,7 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
               h="full"
               rounded="base"
             >
-              <Box
-                //bgImage={`url("${props.template.images[0]}")`}
-                bgImage={`url("/images/thumbnail_small.png")`}
-                bgSize="100% 100%"
-                bgPos="center top"
-                w="full"
-                h="full"
-              />
+              <Thumbnail />
             </Box>
           </AspectRatio>
           {/* favorite button
