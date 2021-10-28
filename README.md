@@ -1,13 +1,4 @@
 # Graphlinq Marketplace
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is [Graphlinq Marketplace](https://marketplace.graphlinq.io) project bootstrapped using Next.js
 
-## Getting Started
-
-```bash
-yarn install
-
-yarn husky install
-
-yarn dev
-```
