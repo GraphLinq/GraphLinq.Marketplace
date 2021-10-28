@@ -31,6 +31,7 @@ import { TemplateBuyButton } from '../TemplateBuyButton'
 import { TemplateDownloadButton } from '../TemplateDownloadButton'
 import { Carousel } from 'react-responsive-carousel'
 import ReactPlayer from 'react-player'
+import { useWeb3React } from '@web3-react/core'
 
 interface TemplateModalProps {
   user?: User
@@ -48,6 +49,8 @@ interface User {
 
 export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const { account } = useWeb3React()
 
   const safeDescription = DOMPurify.sanitize(props.template.description, {
     FORBID_TAGS: ['style', 'script', 'img'],
@@ -264,18 +267,19 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
             ></Flex>
           </ModalBody>
           <ModalFooter>
-            {access ? (
-              <TemplateDownloadButton
-                templateId={props.template.id}
-                templateVersionId={props.template.versions.at(-1)?.id || 0}
-                templateName={props.template.name}
-              />
-            ) : (
-              <TemplateBuyButton
-                templateId={props.template.id}
-                templatePrice={templatePrice}
-              />
-            )}
+            {account &&
+              (access ? (
+                <TemplateDownloadButton
+                  templateId={props.template.id}
+                  templateVersionId={props.template.versions.at(-1)?.id || 0}
+                  templateName={props.template.name}
+                />
+              ) : (
+                <TemplateBuyButton
+                  templateId={props.template.id}
+                  templatePrice={templatePrice}
+                />
+              ))}
             <NextLink href={`/templates/${props.template.id}`}>
               <Button size="lg" rounded="lg" variant="outline">
                 View Full Details

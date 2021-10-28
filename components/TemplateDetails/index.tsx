@@ -20,11 +20,14 @@ import { TemplateDownloadButton } from '../TemplateDownloadButton'
 import { TemplateBuyButton } from '../TemplateBuyButton'
 import { Carousel } from 'react-responsive-carousel'
 import ReactPlayer from 'react-player'
+import { useWeb3React } from '@web3-react/core'
 
 export const TemplateDetails: React.FC<Templates> = (props) => {
   const safeDescription = DOMPurify.sanitize(props.description, {
     FORBID_TAGS: ['style', 'script', 'img'],
   })
+
+  const { account } = useWeb3React()
 
   const price = useTemplatePrice(props.id)
   const templatePrice = formatUnits(price)
@@ -39,7 +42,12 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
     isSelected?: boolean
   }) => {
     return (
-      <ReactPlayer width="auto" height="360px" url={url} playing={isSelected} />
+      <ReactPlayer
+        width="600px"
+        height="360px"
+        url={url}
+        playing={isSelected}
+      />
     )
   }
 
@@ -174,18 +182,19 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
         dangerouslySetInnerHTML={{ __html: safeDescription }}
       ></Flex>
       <Flex mb="1rem">
-        {access ? (
-          <TemplateDownloadButton
-            templateId={props.id}
-            templateVersionId={props.versions.at(-1)?.id || 0}
-            templateName={props.name}
-          />
-        ) : (
-          <TemplateBuyButton
-            templateId={props.id}
-            templatePrice={templatePrice}
-          />
-        )}
+        {account &&
+          (access ? (
+            <TemplateDownloadButton
+              templateId={props.id}
+              templateVersionId={props.versions.at(-1)?.id || 0}
+              templateName={props.name}
+            />
+          ) : (
+            <TemplateBuyButton
+              templateId={props.id}
+              templatePrice={templatePrice}
+            />
+          ))}
       </Flex>
     </>
   )
