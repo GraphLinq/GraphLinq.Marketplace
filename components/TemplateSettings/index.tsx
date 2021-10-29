@@ -130,71 +130,74 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
   const toast = createStandaloneToast()
 
   const [apiResult, setApiResult] = useState<APIResponse>()
+  const [pending, setPending] = useState<boolean>(false)
 
   let explorer: string
   if (chainId) explorer = CHAIN_INFO[chainId].explorer
 
   async function publish() {
-    compressGraph(JSON.stringify(templateData)).then(async (data) => {
-      const result = await TemplateService.publishTemplate({
-        name: props.title,
-        description: props.description,
-        category_id: Number(props.category),
-        price: Number(props.price),
-        data: data,
-        youtube: props.youtubeLink,
-        images: props.images,
-      })
-      setApiResult(result)
-      /* @todo visual feedback for user + redirection */
-      if (result.success && contract != null) {
-        try {
-          const addTx = await contract.addTemplate(
-            result.templateId,
-            parseUnits(props.price),
-            1
-          )
-          toast({
-            title: 'Pending',
-            description: 'Waiting for confirmations ...',
-            position: 'bottom-right',
-            status: 'info',
-            duration: null,
-            isClosable: false,
-          })
-          const addTxReceipt = await library.waitForTransaction(addTx.hash, 2)
-          toast.closeAll()
-          toast({
-            title: 'Template Published',
-            description: (
-              <a
-                href={`${explorer}tx/${addTxReceipt.transactionHash}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                View on etherscan
-              </a>
-            ),
-            position: 'bottom-right',
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-          })
-          //return Router.replace(`/templates/${result.templateId}`)
-          router.push(`/templates/${result.templateId}`)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (e: any) {
-          toast({
-            title: 'Error',
-            description: e && e.message ? `\n\n${e.message}` : '',
-            position: 'bottom-right',
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-          })
+    if (contract != null) {
+      setPending(true)
+      compressGraph(JSON.stringify(templateData)).then(async (data) => {
+        const result = await TemplateService.publishTemplate({
+          name: props.title,
+          description: props.description,
+          category_id: Number(props.category),
+          price: Number(props.price),
+          data: data,
+          youtube: props.youtubeLink,
+          images: props.images,
+        })
+        setApiResult(result)
+        if (result.success) {
+          try {
+            const addTx = await contract.addTemplate(
+              result.templateId,
+              parseUnits(props.price),
+              1
+            )
+            toast({
+              title: 'Pending',
+              description: 'Waiting for confirmations ...',
+              position: 'bottom-right',
+              status: 'info',
+              duration: null,
+              isClosable: false,
+            })
+            const addTxReceipt = await library.waitForTransaction(addTx.hash, 2)
+            toast.closeAll()
+            toast({
+              title: 'Template Published',
+              description: (
+                <a
+                  href={`${explorer}tx/${addTxReceipt.transactionHash}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View on the explorer
+                </a>
+              ),
+              position: 'bottom-right',
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+            })
+            //return Router.replace(`/templates/${result.templateId}`)
+            router.push(`/templates/${result.templateId}`)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } catch (e: any) {
+            toast({
+              title: 'Error',
+              description: e && e.message ? `\n\n${e.message}` : '',
+              position: 'bottom-right',
+              status: 'error',
+              duration: 9000,
+              isClosable: true,
+            })
+          }
         }
-      }
-    })
+      })
+    }
   }
 
   return (
@@ -252,7 +255,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
         >
           Go Back
         </Button>
-        <Button w="50%" size="lg" ml={1} onClick={publish}>
+        <Button w="50%" size="lg" ml={1} onClick={publish} disabled={pending}>
           Publish Template
         </Button>
       </Flex>
