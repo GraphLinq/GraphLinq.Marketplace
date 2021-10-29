@@ -31,15 +31,16 @@ const UserTemplates: React.FC<UserTemplatesProps> = ({ userId }) => {
         ? 'loading...'
         : // eslint-disable-next-line @typescript-eslint/no-explicit-any
           data.results.publishedTemplates.map((t: Templates, i: number) => {
-            return (
-              <TemplateCard
-                key={`${t.id}-${i}`}
-                template={t}
-                user={{
-                  ...data.templates,
-                }}
-              />
-            )
+            if (t.is_published)
+              return (
+                <TemplateCard
+                  key={`${t.id}-${i}`}
+                  template={t}
+                  user={{
+                    ...data.templates,
+                  }}
+                />
+              )
           })}
     </Flex>
   )

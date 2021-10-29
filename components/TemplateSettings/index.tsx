@@ -149,7 +149,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
           images: props.images,
         })
         setApiResult(result)
-        if (result.success) {
+        if (result.success && result.templateId) {
           try {
             const addTx = await contract.addTemplate(
               result.templateId,
@@ -165,6 +165,7 @@ export const TemplateSettings: React.FC<TemplateSettingsProps> = (props) => {
               isClosable: false,
             })
             const addTxReceipt = await library.waitForTransaction(addTx.hash, 2)
+            await TemplateService.putTemplate(result.templateId)
             toast.closeAll()
             toast({
               title: 'Template Published',

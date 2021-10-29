@@ -173,6 +173,28 @@ export default class ManagerProvider {
     })
   }
 
+  public static putTemplate(
+    templateId: number,
+    token: string
+  ): Promise<PublishResponse> {
+    return new Promise<PublishResponse>((resolve, reject) => {
+      fetch(`${this.baseUrl}/templates/${templateId}/publish`, {
+        method: 'put',
+        //body: JSON.stringify(updateTemplate),
+        headers: {
+          //'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res: any) => {
+          res.status === 200
+            ? resolve(res.json() as PublishResponse)
+            : reject(res.json() as ErrorResponse)
+        })
+        .catch((error: any) => reject(error))
+    })
+  }
+
   public static updateProfile(
     profile: UpdateProfileRequest,
     token: string,

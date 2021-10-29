@@ -101,7 +101,7 @@ export function useTemplateAccess(templateId: number): boolean {
   )
 
   const [hasAccess, setHasAccess] = useState<boolean>(false)
-  const { account } = useWeb3React()
+  const { account, active } = useWeb3React()
 
   const fetchAccess = async () => {
     if (contract != null) {
@@ -120,6 +120,6 @@ export function useTemplateAccess(templateId: number): boolean {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (account == '') return false
+  if (!account || !active) return false
   return hasAccess
 }

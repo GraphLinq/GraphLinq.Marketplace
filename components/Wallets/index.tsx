@@ -68,10 +68,10 @@ export const Wallets: React.FC = ({}) => {
         .signMessage(process.env.NEXT_PUBLIC_SIGN_KEY)
         .then(async (signature: string) => {
           toast({
-            title: 'Successfully signed',
-            description: `${signature}`,
+            title: 'Authentification pending...',
+            description: 'Please wait, you will be redirected',
             position: 'bottom-right',
-            status: 'success',
+            status: 'info',
             duration: 9000,
             isClosable: true,
           })

@@ -119,6 +119,7 @@ export interface Templates {
   versions: Version[]
   rating: Rating
   favoriteCount: number
+  is_published: boolean
 }
 
 export interface Asset {

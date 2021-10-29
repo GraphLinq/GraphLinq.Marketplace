@@ -215,7 +215,8 @@ const Home: NextPage = () => {
             </Text>
           ) : (
             data.results.map((t: Templates, i: number) => {
-              return <TemplateCard key={`${t.id}-${i}`} template={t} />
+              if (t.is_published)
+                return <TemplateCard key={`${t.id}-${i}`} template={t} />
             })
           )}
         </Flex>

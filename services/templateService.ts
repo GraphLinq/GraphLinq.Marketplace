@@ -72,4 +72,20 @@ export default class TemplateService {
       return error as any
     }
   }
+
+  public static async putTemplate(
+    templateId: number
+  ): Promise<PublishResponse> {
+    try {
+      const session = JSON.parse(localStorage.getItem('session') as string)
+      const result: PublishResponse = await ManagerProvider.putTemplate(
+        templateId,
+        session.token
+      )
+      return result
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return error as any
+    }
+  }
 }
