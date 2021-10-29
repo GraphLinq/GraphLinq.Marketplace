@@ -15,6 +15,7 @@ import NextLink from 'next/link'
 import { shortenAddress } from 'utils'
 import { useTemplatePrice } from 'hooks/wallet'
 import { formatUnits } from '@ethersproject/units'
+import { TemplatePrice } from '@/components/TemplatePrice'
 
 interface TemplateCardProps {
   user?: User
@@ -32,7 +33,6 @@ interface User {
 
 const TemplateCard: React.FC<TemplateCardProps> = (props) => {
   //const isFavorite = false
-
   const price = useTemplatePrice(props.template.id)
   const templatePrice = formatUnits(price)
 
@@ -69,46 +69,6 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
       )
     }
   }
-  /* const Thumbnail = () => {
-    if (props.template.assets.length !== 0) {
-      const image = props.template.assets.filter(
-        (asset) => asset.type == 'image'
-      )[0].data
-      return (
-        <Box
-          bgImage={`url(${thumbnail})`}
-          bgSize="100% 100%"
-          bgPos="center top"
-          w="full"
-          h="full"
-        />
-      )
-    } else {
-      return (
-        <Box
-          bgImage={`url(${thumbnail})`}
-          bgSize="100% 100%"
-          bgPos="center top"
-          w="full"
-          h="full"
-        />
-      )
-    }
-  } */
-
-  //const thumbnail = async () => await getThumbnail()
-
-  /*  React.useEffect(() => {
-    if (props.template.assets && props.template.assets.length != 0) {
-      const image = props.template.assets.filter(
-        (asset) => asset.type == 'image'
-      )
-      console.log(image[0].data)
-      setThumbnail(image[0].data)
-    } else {
-      setThumbnail('"/images/thumbnail_small.png"')
-    }
-  }, [props.template.assets]) */
 
   return (
     <Box
@@ -184,11 +144,10 @@ const TemplateCard: React.FC<TemplateCardProps> = (props) => {
           </LinkOverlay>
           {/* <Rating {...props} /> */}
           <Text fontSize="md">
-            {/* {props.template.price.isFree ? 'FREE' : props.template.price.price + ' GLQ'} */}
-            {/* {props.template.template_cost + ' GLQ'} */}
-            {templatePrice == '0.0'
-              ? props.template.template_cost + ' GLQ'
-              : templatePrice + ' GLQ'}
+            <TemplatePrice
+              dbPrice={props.template.template_cost}
+              contractPrice={templatePrice}
+            />
           </Text>
         </LinkBox>
       </Flex>

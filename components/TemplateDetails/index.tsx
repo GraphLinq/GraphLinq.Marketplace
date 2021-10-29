@@ -21,6 +21,7 @@ import { TemplateBuyButton } from '../TemplateBuyButton'
 import { Carousel } from 'react-responsive-carousel'
 import ReactPlayer from 'react-player'
 import { useWeb3React } from '@web3-react/core'
+import { TemplatePrice } from '@/components/TemplatePrice'
 
 export const TemplateDetails: React.FC<Templates> = (props) => {
   const safeDescription = DOMPurify.sanitize(props.description, {
@@ -142,9 +143,10 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
               </Flex>
             </Box>
             <Text fontSize={['xl', '2xl']} fontWeight="bold">
-              {templatePrice == '0.0'
-                ? props.template_cost + ' GLQ'
-                : templatePrice + ' GLQ'}
+              <TemplatePrice
+                dbPrice={props.template_cost}
+                contractPrice={templatePrice}
+              />
             </Text>
             <VStack spacing={3} align="stretch" mt="20px">
               {/* <Flex justifyContent="space-between">
