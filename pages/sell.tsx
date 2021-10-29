@@ -4,8 +4,12 @@ import { Container, Heading, useBoolean } from '@chakra-ui/react'
 import { TemplateUpload } from '@/components/TemplateUpload'
 import { TemplateRoot, TemplateSettings } from '@/components/TemplateSettings'
 import GraphService from 'services/graphService'
+import { useWeb3React } from '@web3-react/core'
+import { ErrorNotConnected } from '@/components/ErrorNotConnected'
 
 const Sell: NextPage = () => {
+  const { active, account } = useWeb3React()
+
   const [step, setStep] = useBoolean()
   const [price, setPrice] = useState('')
   const [title, setTitle] = useState('')
@@ -42,6 +46,7 @@ const Sell: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [compressedTemplate])
 
+  if (!active || !account) return <ErrorNotConnected />
   return (
     <Container
       mt="3.5rem"

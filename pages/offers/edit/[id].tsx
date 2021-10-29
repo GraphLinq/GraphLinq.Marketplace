@@ -14,6 +14,8 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import OfferService from 'services/offerService'
+import { ErrorNotConnected } from '@/components/ErrorNotConnected'
+import { useWeb3React } from '@web3-react/core'
 
 const EditOffer: NextPage = () => {
   const [offerTitle, setOfferTitle] = useState<string>('')
@@ -46,7 +48,8 @@ const EditOffer: NextPage = () => {
       console.log('offer submited')
     }
   }
-
+  const { active, account } = useWeb3React()
+  if (!active || !account) return <ErrorNotConnected />
   return (
     <Container
       mt="3.5rem"

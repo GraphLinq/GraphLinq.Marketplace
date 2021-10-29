@@ -14,10 +14,13 @@ import React, { useEffect, useState } from 'react'
 import GraphService from 'services/graphService'
 import useSWR from 'swr'
 import { TemplateEditSettings } from '@/components/TemplateEditSettings'
+import { ErrorNotConnected } from '@/components/ErrorNotConnected'
+import { useWeb3React } from '@web3-react/core'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const TemplateEdit: React.FC = ({}) => {
+  const { active, account } = useWeb3React()
   const router = useRouter()
   const { id } = router.query
   const { data, error } = useSWR(
@@ -71,6 +74,7 @@ const TemplateEdit: React.FC = ({}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [compressedTemplate])
 
+  if (!active || !account) return <ErrorNotConnected />
   if (error)
     return (
       <Box textAlign="center" mt="8">
