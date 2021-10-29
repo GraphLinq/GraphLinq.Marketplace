@@ -185,6 +185,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
         color="text.50"
         w="full"
         my="2rem"
+        whiteSpace="pre-wrap"
         dangerouslySetInnerHTML={{ __html: safeDescription }}
       ></Flex>
       <Flex mb="1rem">

@@ -16,6 +16,7 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { FaCog } from 'react-icons/fa'
 import NextLink from 'next/link'
+import DOMPurify from 'isomorphic-dompurify'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -26,6 +27,10 @@ const OfferPage: React.FC = ({}) => {
     id ? `${process.env.NEXT_PUBLIC_MANAGER_URL}/offers/${id}` : null,
     id ? fetcher : null
   )
+
+  const safeDescription = DOMPurify.sanitize(data.results.description, {
+    FORBID_TAGS: ['style', 'script', 'img'],
+  })
 
   if (error)
     return (
@@ -76,7 +81,11 @@ const OfferPage: React.FC = ({}) => {
           </NextLink>
         </Box>
       </Flex>
-      <Box py={4}>{data.results.description}</Box>
+      <Box
+        py={4}
+        whiteSpace="pre-wrap"
+        dangerouslySetInnerHTML={{ __html: safeDescription }}
+      ></Box>
     </Container>
   )
 }
