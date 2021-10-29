@@ -8,9 +8,13 @@ import {
   Spinner,
   Box,
   Link,
+  Flex,
+  Spacer,
+  Button,
 } from '@chakra-ui/react'
 import useSWR from 'swr'
 import { OfferCard, OfferCardProps } from '@/components/OfferCard'
+import NextLink from 'next/link'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -45,9 +49,17 @@ const OfferPage: React.FC = ({}) => {
       display="flex"
       flexDirection="column"
     >
-      <Heading size="xl" color="white">
-        Offers
-      </Heading>
+      <Flex>
+        <Heading size="xl" color="white">
+          Offers
+        </Heading>
+        <Spacer />
+        <NextLink href="/offers/create" passHref>
+          <Button as="a" size="md">
+            Post an offer
+          </Button>
+        </NextLink>
+      </Flex>
       <Stack
         py={4}
         spacing={4}
