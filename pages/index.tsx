@@ -177,7 +177,10 @@ const Home: NextPage = () => {
                     title="Sort by"
                     type="radio"
                   >
-                    <MenuItemOption value="recent">
+                    <MenuItemOption
+                      value="recent"
+                      onClick={() => changeFilter('recent', 0)}
+                    >
                       Recently added
                     </MenuItemOption>
                     {/* <MenuItemOption value="rating">Rating</MenuItemOption> */}
