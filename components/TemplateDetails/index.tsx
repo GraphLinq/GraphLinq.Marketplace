@@ -76,7 +76,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
     <>
       <Flex
         flexDir="row"
-        flexWrap="wrap-reverse"
+        flexWrap={['wrap', 'nowrap']}
         justifyContent="space-between"
       >
         <Flex
@@ -118,7 +118,10 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
         >
           <Box w="full">
             <Box>
-              <Heading size={useBreakpointValue(['lg', 'lg', 'xl'])}>
+              <Heading
+                size={useBreakpointValue(['lg', 'lg', 'xl'])}
+                wordBreak="break-word"
+              >
                 {props.name}
               </Heading>
               <Flex

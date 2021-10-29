@@ -144,7 +144,11 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
         >
           <ModalCloseButton color="text.300" />
           <ModalBody p="30px" display="flex" flexDir="column">
-            <Flex flexDir="row" flexWrap="wrap" justifyContent="space-between">
+            <Flex
+              flexDir="row"
+              flexWrap={['wrap', 'nowrap']}
+              justifyContent="space-between"
+            >
               <Flex
                 w={['auto', '600px']}
                 h={['auto', '360px']}
@@ -186,7 +190,9 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
               >
                 <Box w="full">
                   <Box>
-                    <Heading size="md">{props.template.name}</Heading>
+                    <Heading size="md" wordBreak="break-word">
+                      {props.template.name}
+                    </Heading>
                     <Flex
                       my="12px"
                       justifyContent="space-between"
