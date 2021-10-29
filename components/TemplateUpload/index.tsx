@@ -13,6 +13,7 @@ import {
   Textarea,
   Select,
   SimpleGrid,
+  FormHelperText,
 } from '@chakra-ui/react'
 import { createRef, useState } from 'react'
 import { ALL_CATEGORY_IDS, CATEGORY_INFO } from 'constants/template'
@@ -256,6 +257,9 @@ export const TemplateUpload: React.FC<TemplateUploadProps> = (props) => {
           multiple
           hidden
         />
+        <FormHelperText mb={1}>
+          Recommanded image size: 600 x 360 px
+        </FormHelperText>
         <SimpleGrid
           columns={4}
           spacing={10}

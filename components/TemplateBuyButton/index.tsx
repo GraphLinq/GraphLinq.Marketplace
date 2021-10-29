@@ -12,6 +12,7 @@ import { CHAIN_INFO } from '@/constants/chains'
 interface TemplateBuyButtonProps {
   templateId: number
   templatePrice: string
+  publisherAddr: string
 }
 
 export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
@@ -123,6 +124,7 @@ export const TemplateBuyButton: React.FC<TemplateBuyButtonProps> = (props) => {
     }
   }
 
+  if (account == props.publisherAddr) return <></>
   return (
     <Button size="lg" rounded="lg" mr="0.5rem" onClick={buyTemplate}>
       Buy Template

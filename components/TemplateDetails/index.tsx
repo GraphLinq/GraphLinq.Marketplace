@@ -189,7 +189,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
       ></Flex>
       <Flex mb="1rem">
         {account &&
-          (access ? (
+          (access || props.template_cost == 0 ? (
             <TemplateDownloadButton
               templateId={props.id}
               templateVersionId={props.versions.at(-1)?.id || 0}
@@ -199,6 +199,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
             <TemplateBuyButton
               templateId={props.id}
               templatePrice={templatePrice}
+              publisherAddr={props.user?.publicAddress || ''}
             />
           ))}
       </Flex>

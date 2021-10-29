@@ -32,6 +32,7 @@ import { TemplateDownloadButton } from '../TemplateDownloadButton'
 import { Carousel } from 'react-responsive-carousel'
 import ReactPlayer from 'react-player'
 import { useWeb3React } from '@web3-react/core'
+import { TemplatePrice } from '../TemplatePrice'
 
 interface TemplateModalProps {
   user?: User
@@ -221,9 +222,10 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                     </Flex>
                   </Box>
                   <Box fontSize="2xl" fontWeight="bold">
-                    {templatePrice == '0.0'
-                      ? props.template.template_cost + ' GLQ'
-                      : templatePrice + ' GLQ'}
+                    <TemplatePrice
+                      dbPrice={props.template.template_cost}
+                      contractPrice={templatePrice}
+                    />
                   </Box>
                   <VStack spacing={3} align="stretch" mt="20px">
                     {/* <Flex justifyContent="space-between">
@@ -274,7 +276,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
           </ModalBody>
           <ModalFooter>
             {account &&
-              (access ? (
+              (access || props.template.template_cost == 0 ? (
                 <TemplateDownloadButton
                   templateId={props.template.id}
                   templateVersionId={props.template.versions.at(-1)?.id || 0}
@@ -284,6 +286,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                 <TemplateBuyButton
                   templateId={props.template.id}
                   templatePrice={templatePrice}
+                  publisherAddr={props.template.user?.publicAddress || ''}
                 />
               ))}
             <NextLink href={`/templates/${props.template.id}`}>

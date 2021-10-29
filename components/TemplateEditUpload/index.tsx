@@ -148,6 +148,13 @@ export const TemplateEditUpload: React.FC<TemplateEditUploadProps> = (
   const toast = createStandaloneToast()
 
   async function updateTemplate() {
+    toast({
+      title: 'Updating...',
+      position: 'bottom-right',
+      status: 'info',
+      duration: null,
+      isClosable: false,
+    })
     const result = await TemplateService.updateTemplate(
       {
         name: props.title,
