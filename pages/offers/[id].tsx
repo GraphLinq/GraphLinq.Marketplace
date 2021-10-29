@@ -17,20 +17,18 @@ import useSWR from 'swr'
 import { FaCog } from 'react-icons/fa'
 import NextLink from 'next/link'
 import DOMPurify from 'isomorphic-dompurify'
+import { useWeb3React } from '@web3-react/core'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const OfferPage: React.FC = ({}) => {
+  const { account } = useWeb3React()
   const router = useRouter()
   const { id } = router.query
   const { data, error } = useSWR(
     id ? `${process.env.NEXT_PUBLIC_MANAGER_URL}/offers/${id}` : null,
     id ? fetcher : null
   )
-
-  const safeDescription = DOMPurify.sanitize(data.results.description, {
-    FORBID_TAGS: ['style', 'script', 'img'],
-  })
 
   if (error)
     return (
@@ -50,6 +48,9 @@ const OfferPage: React.FC = ({}) => {
         />
       </Center>
     )
+  const safeDescription = DOMPurify.sanitize(data.results.description, {
+    FORBID_TAGS: ['style', 'script', 'img'],
+  })
   return (
     <Container
       mt="3.5rem"
@@ -74,11 +75,13 @@ const OfferPage: React.FC = ({}) => {
             <Button size="md">Contact</Button>
           </NextLink>
           {/* button edit owner only */}
-          <NextLink href={`/offers/edit?id=${data.results.id}`}>
-            <Button ml={2} size="md" leftIcon={<Icon as={FaCog} />}>
-              Edit
-            </Button>
-          </NextLink>
+          {data.results.user.publicAddress == account && (
+            <NextLink href={`/offers/edit?id=${data.results.id}`}>
+              <Button ml={2} size="md" leftIcon={<Icon as={FaCog} />}>
+                Edit
+              </Button>
+            </NextLink>
+          )}
         </Box>
       </Flex>
       <Box
