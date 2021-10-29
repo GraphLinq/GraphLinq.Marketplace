@@ -1,4 +1,4 @@
-import { Text, Box } from '@chakra-ui/react'
+import { Text, Box, Link } from '@chakra-ui/react'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 
@@ -32,13 +32,14 @@ export default function Web3ReactManager({
   useInactiveListener(!triedEager)
 
   // if the account context isn't active, and there's an error on the network context, it's an irrecoverable error
-  if (triedEager && !active && networkError) {
+  if (triedEager && active && networkError) {
     return (
-      <Box m="auto">
-        <Text>
+      <Box textAlign="center" mt="8">
+        <Text className="lg">
           Oops! An unknown error occurred. Please refresh the page, or visit
           from another browser or device.
         </Text>
+        <Link href="/">Go back to home page</Link>
       </Box>
     )
   }
