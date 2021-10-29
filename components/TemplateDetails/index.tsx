@@ -86,6 +86,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
           borderRadius="md"
           alignItems="flex-start"
           justifyContent="center"
+          minW="600px"
         >
           {props.assets.length == 0 ? (
             <Image
