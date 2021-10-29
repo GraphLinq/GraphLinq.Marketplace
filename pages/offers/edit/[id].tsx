@@ -11,17 +11,21 @@ import {
   Button,
   InputGroup,
   InputRightAddon,
+  createStandaloneToast,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import OfferService from 'services/offerService'
 import { ErrorNotConnected } from '@/components/ErrorNotConnected'
 import { useWeb3React } from '@web3-react/core'
+import { useRouter } from 'next/router'
 
 const EditOffer: NextPage = () => {
   const [offerTitle, setOfferTitle] = useState<string>('')
   const [offerContact, setOfferContact] = useState<string>('')
   const [offerBudget, setOfferBudget] = useState<number>(0)
   const [offerDescription, setOfferDescription] = useState<string>('')
+  const toast = createStandaloneToast()
+  const router = useRouter()
 
   const handleOfferTitleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setOfferTitle(event.target.value)
@@ -44,8 +48,14 @@ const EditOffer: NextPage = () => {
       description: offerDescription,
     })
     if (result) {
-      /* @todo visual feedback + redirection */
-      console.log('offer submited')
+      toast({
+        title: 'Edit successful',
+        position: 'bottom-right',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+      router.push(`/offers`)
     }
   }
   const { active, account } = useWeb3React()
