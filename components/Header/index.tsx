@@ -54,9 +54,8 @@ export const Header: React.FC = ({}) => {
             <AlertTitle mr={2}>Network not supported !</AlertTitle>
             <AlertDescription>
               Please switch to : <b>{CHAIN_INFO[defaultChain].label}</b> and
-              refresh this
+              refresh this page
             </AlertDescription>
-            page
           </Alert>
         </Box>
       )}
@@ -165,17 +164,6 @@ const MobileMenu: React.FC = ({}) => {
               </Box>
             </VStack>
           </DrawerBody>
-
-          {/* <DrawerFooter bgColor="brand.700">
-            <Flex justifyContent="space-around" w="full">
-              <Button size="sm" rounded="full" mr="0.5rem">
-                Sell Templates
-              </Button>
-              <Button size="sm" variant="outline" rounded="full">
-                Offers
-              </Button>
-            </Flex>
-          </DrawerFooter> */}
         </DrawerContent>
       </Drawer>
     </>
