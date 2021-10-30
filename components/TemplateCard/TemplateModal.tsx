@@ -190,6 +190,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                     renderItem={customRenderItem}
                     showStatus={false}
                     dynamicHeight={false}
+                    showThumbs={false}
                   >
                     {props.template.assets.map((asset, i) => (
                       <CarouselSlide

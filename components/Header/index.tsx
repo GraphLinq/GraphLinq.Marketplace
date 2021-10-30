@@ -31,73 +31,81 @@ import { CHAIN_INFO } from '@/constants/chains'
 export const Header: React.FC = ({}) => {
   const { account, chainId } = useWeb3React()
 
+  let session = ''
+  if (typeof window !== 'undefined')
+    session = JSON.parse(localStorage.getItem('session') as string) || ''
+
   const defaultChain = Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID)
 
   return (
-    <Box bgColor="brand.500" color="white" as="header">
-      <Container
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        h="4rem"
-        m="auto"
-        maxW={['container.sm', 'container.md', 'container.xl']}
-      >
-        <NextLink href="/" passHref>
-          <Link display="flex" alignItems="center">
-            <Logo w={['6rem', '10rem']} h="auto" />
-          </Link>
-        </NextLink>
+    <>
+      {chainId && chainId !== defaultChain && (
+        <Box bg="red.500">
+          <Alert status="error" bg="transparent">
+            <AlertIcon />
+            <AlertTitle mr={2}>Network not supported !</AlertTitle>
+            Please switch to : {CHAIN_INFO[defaultChain].label} and refresh this
+            page
+          </Alert>
+        </Box>
+      )}
+      <Box bgColor="brand.500" color="white" as="header">
+        <Container
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+          h="4rem"
+          m="auto"
+          maxW={['container.sm', 'container.md', 'container.xl']}
+        >
+          <NextLink href="/" passHref>
+            <Link display="flex" alignItems="center">
+              <Logo w={['6rem', '10rem']} h="auto" />
+            </Link>
+          </NextLink>
 
-        {chainId && chainId !== defaultChain && (
-          <Box mx="auto">
-            <Alert status="error" rounded="full">
-              <AlertIcon />
-              <AlertTitle mr={2}>Network not supported !</AlertTitle>
-              Please switch to : {CHAIN_INFO[defaultChain].label} and refresh
-              this page
-            </Alert>
-          </Box>
-        )}
-        <Flex alignItems="center">
-          <Box display={['none', 'flex']} mr="1rem">
-            <NextLink href="/offers" passHref>
-              <Button as="a" rounded="full" mr="1rem">
-                Offers
-              </Button>
-            </NextLink>
-            <NextLink href="/sell" passHref>
-              <Button as="a" rounded="full" mr="1rem">
-                Sell Templates
-              </Button>
-            </NextLink>
-            {!account && (
-              <NextLink href="/connect" passHref>
-                <Button as="a" variant="outline" rounded="full">
-                  Connect wallet
+          <Flex alignItems="center">
+            <Box display={['none', 'flex']} mr="1rem">
+              <NextLink href="/offers" passHref>
+                <Button as="a" rounded="full" mr="1rem">
+                  Offers
                 </Button>
               </NextLink>
-            )}
-          </Box>
-          <Box display={['flex', 'none']} mr="1rem" alignItems="center">
-            {!account ? (
-              <NextLink href="/connect" passHref>
-                <Button variant="outline" rounded="full" size="sm">
-                  Connect wallet
+              <NextLink href="/sell" passHref>
+                <Button as="a" rounded="full" mr="1rem">
+                  Sell Templates
                 </Button>
               </NextLink>
-            ) : (
-              <>
-                <MobileMenu />
-              </>
-            )}
-          </Box>
-          {account && <DropdownMenu />}
-        </Flex>
-      </Container>
-      <SearchBar />
-    </Box>
+              {!account || session == '' ? (
+                <NextLink href="/connect" passHref>
+                  <Button as="a" variant="outline" rounded="full">
+                    Connect wallet
+                  </Button>
+                </NextLink>
+              ) : (
+                <></>
+              )}
+            </Box>
+            <Box display={['flex', 'none']} mr="1rem" alignItems="center">
+              {!account || session == '' ? (
+                <NextLink href="/connect" passHref>
+                  <Button variant="outline" rounded="full" size="sm">
+                    Connect wallet
+                  </Button>
+                </NextLink>
+              ) : (
+                <>
+                  <MobileMenu />
+                </>
+              )}
+            </Box>
+            {account && session != '' && <DropdownMenu />}
+          </Flex>
+        </Container>
+        <SearchBar />
+      </Box>
+    </>
   )
 }
 
