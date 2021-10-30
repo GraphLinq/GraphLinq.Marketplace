@@ -69,7 +69,17 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
     url: string
     isSelected?: boolean
   }) => {
-    return <ReactPlayer width="100%" url={url} playing={isSelected} />
+    return (
+      <Box position="relative" pt="56.25%">
+        <ReactPlayer
+          style={{ position: 'absolute', top: 0, left: 0 }}
+          width="100%"
+          height="100%"
+          url={url}
+          playing={isSelected}
+        />
+      </Box>
+    )
   }
 
   const CarouselSlide = ({
@@ -84,7 +94,16 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
     if (type == 'youtube') {
       return <YoutubeSlide key={key} url={url} />
     } else {
-      return <Image key={key} src={url} alt="" width={600} height={360} />
+      return (
+        <Image
+          key={key}
+          src={url}
+          alt=""
+          width={600}
+          height={360}
+          objectFit="cover"
+        />
+      )
     }
   }
 
@@ -151,8 +170,8 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
               justifyContent="space-between"
             >
               <Flex
-                w={['auto', '600px']}
-                h={['auto', '360px']}
+                w={{ base: '300px', md: '360px', lg: '600px' }}
+                h={{ base: '180px', md: '240px', lg: '360px' }}
                 bgColor="brand.700"
                 borderRadius="md"
                 alignItems="flex-start"
@@ -170,7 +189,6 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                     showArrows={true}
                     renderItem={customRenderItem}
                     showStatus={false}
-                    width={600}
                     dynamicHeight={false}
                   >
                     {props.template.assets.map((asset, i) => (
@@ -185,7 +203,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
               </Flex>
               <Flex
                 direction="column"
-                pl="30px"
+                pl={['0px', '30px']}
                 mt={['30px', '30px', '30px', '0px']}
                 flexGrow={2}
               >

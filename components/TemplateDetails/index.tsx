@@ -43,12 +43,15 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
     isSelected?: boolean
   }) => {
     return (
-      <ReactPlayer
-        width="600px"
-        height="360px"
-        url={url}
-        playing={isSelected}
-      />
+      <Box position="relative" pt="56.25%">
+        <ReactPlayer
+          style={{ position: 'absolute', top: 0, left: 0 }}
+          width="100%"
+          height="100%"
+          url={url}
+          playing={isSelected}
+        />
+      </Box>
     )
   }
 
@@ -64,7 +67,16 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
     if (type == 'youtube') {
       return <YoutubeSlide key={key} url={url} />
     } else {
-      return <Image key={key} src={url} alt="" width={600} height={360} />
+      return (
+        <Image
+          key={key}
+          src={url}
+          alt=""
+          width={600}
+          height={360}
+          objectFit="cover"
+        />
+      )
     }
   }
 
@@ -81,13 +93,12 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
         justifyContent="space-between"
       >
         <Flex
-          w={['full', '600px']}
-          h={['auto', '360px']}
+          w={{ base: '300px', md: '360px', lg: '600px' }}
+          h={{ base: '180px', md: '240px', lg: '360px' }}
           bgColor="brand.900"
           borderRadius="md"
           alignItems="flex-start"
           justifyContent="center"
-          minW="600px"
         >
           {props.assets.length == 0 ? (
             <Image
@@ -101,6 +112,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
               showArrows={true}
               renderItem={customRenderItem}
               showStatus={false}
+              dynamicHeight={false}
             >
               {props.assets.map((asset, i) => (
                 <CarouselSlide
@@ -115,7 +127,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
         <Flex
           direction="column"
           pl={['0', '30px']}
-          mb={['30px', '30px', '0px', '0px']}
+          mt={['30px', '30px', '0px', '0px']}
           flexGrow={2}
         >
           <Box w="full">
