@@ -19,6 +19,7 @@ import {
   Alert,
   AlertIcon,
   AlertTitle,
+  AlertDescription,
 } from '@chakra-ui/react'
 import { HiMenu } from 'react-icons/hi'
 import { Logo } from '../Logo'
@@ -41,10 +42,20 @@ export const Header: React.FC = ({}) => {
     <>
       {chainId && chainId !== defaultChain && (
         <Box bg="red.500">
-          <Alert status="error" bg="transparent">
+          <Alert
+            status="error"
+            bg="transparent"
+            flexDir={['column', 'row']}
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+          >
             <AlertIcon />
             <AlertTitle mr={2}>Network not supported !</AlertTitle>
-            Please switch to : {CHAIN_INFO[defaultChain].label} and refresh this
+            <AlertDescription>
+              Please switch to : <b>{CHAIN_INFO[defaultChain].label}</b> and
+              refresh this
+            </AlertDescription>
             page
           </Alert>
         </Box>
