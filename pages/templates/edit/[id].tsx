@@ -126,7 +126,9 @@ const TemplateEdit: React.FC = ({}) => {
           compressedTemplate={compressedTemplate}
           setCompressedTemplate={setCompressedTemplate}
           templateId={Number(id)}
-          templateVersion={data.results.versions.at(-1).id}
+          templateVersion={
+            data.results.versions[data.results.versions.length - 1].id
+          }
           showFileUpload={showFileUpload}
           setShowFileUpload={setShowFileUpload}
         />
@@ -141,7 +143,9 @@ const TemplateEdit: React.FC = ({}) => {
           youtubeLink={youtubeLink}
           fileImagesUpload={fileImagesUpload}
           templateId={Number(id)}
-          templateVersion={data.results.versions.at(-1).id}
+          templateVersion={
+            data.results.versions[data.results.versions.length - 1].id
+          }
         />
       ) : (
         <>no template</>

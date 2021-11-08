@@ -178,7 +178,9 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
                 <Text color="text.100" fontWeight="500">
                   Latest version
                 </Text>
-                <Text>{props.versions.at(-1)?.current_version}</Text>
+                <Text>
+                  {props.versions[props.versions.length - 1]?.current_version}
+                </Text>
               </Flex>
               <Flex justifyContent="space-between">
                 <Text color="text.100" fontWeight="500">
@@ -187,7 +189,11 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
                 <Text>
                   {new Intl.DateTimeFormat('en-GB', {
                     dateStyle: 'long',
-                  }).format(Date.parse(props.versions.at(-1)?.updatedAt || ''))}
+                  }).format(
+                    Date.parse(
+                      props.versions[props.versions.length - 1]?.updatedAt || ''
+                    )
+                  )}
                 </Text>
               </Flex>
             </VStack>
@@ -206,7 +212,9 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
           (access || props.template_cost == 0 ? (
             <TemplateDownloadButton
               templateId={props.id}
-              templateVersionId={props.versions.at(-1)?.id || 0}
+              templateVersionId={
+                props.versions[props.versions.length - 1]?.id || 0
+              }
               templateName={props.name}
             />
           ) : (

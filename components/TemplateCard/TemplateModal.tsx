@@ -264,7 +264,11 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                         Latest version
                       </Text>
                       <Text>
-                        {props.template.versions.at(-1)?.current_version}
+                        {
+                          props.template.versions[
+                            props.template.versions.length - 1
+                          ]?.current_version
+                        }
                       </Text>
                     </Flex>
                     <Flex justifyContent="space-between">
@@ -276,7 +280,9 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
                           dateStyle: 'long',
                         }).format(
                           Date.parse(
-                            props.template.versions.at(-1)?.updatedAt || ''
+                            props.template.versions[
+                              props.template.versions.length - 1
+                            ]?.updatedAt || ''
                           )
                         )}
                       </Text>
@@ -298,7 +304,10 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
               (access || props.template.template_cost == 0 ? (
                 <TemplateDownloadButton
                   templateId={props.template.id}
-                  templateVersionId={props.template.versions.at(-1)?.id || 0}
+                  templateVersionId={
+                    props.template.versions[props.template.versions.length - 1]
+                      ?.id || 0
+                  }
                   templateName={props.template.name}
                 />
               ) : (
