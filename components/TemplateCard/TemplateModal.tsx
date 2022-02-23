@@ -33,6 +33,7 @@ import { Carousel } from 'react-responsive-carousel'
 import ReactPlayer from 'react-player'
 import { useWeb3React } from '@web3-react/core'
 import { TemplatePrice } from '../TemplatePrice'
+import { useCheckAccess } from 'hooks/useApi'
 
 interface TemplateModalProps {
   user?: User
@@ -50,6 +51,7 @@ interface User {
 
 export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  useCheckAccess(props.template.id)
 
   const { account } = useWeb3React()
 
@@ -101,7 +103,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = (props) => {
           alt=""
           width={600}
           height={360}
-          objectFit="cover"
+          objectFit="contain"
         />
       )
     }

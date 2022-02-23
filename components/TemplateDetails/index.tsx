@@ -22,12 +22,13 @@ import { Carousel } from 'react-responsive-carousel'
 import ReactPlayer from 'react-player'
 import { useWeb3React } from '@web3-react/core'
 import { TemplatePrice } from '@/components/TemplatePrice'
+import { useCheckAccess } from 'hooks/useApi'
 
 export const TemplateDetails: React.FC<Templates> = (props) => {
   const safeDescription = DOMPurify.sanitize(props.description, {
     FORBID_TAGS: ['style', 'script', 'img'],
   })
-
+  useCheckAccess(props.id)
   const { account } = useWeb3React()
 
   const price = useTemplatePrice(props.id)
@@ -68,21 +69,38 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
       return <YoutubeSlide key={key} url={url} />
     } else {
       return (
+        /* <Box
+          display={'block'}
+          position={'relative'}
+          width={'100%'}
+          height={'100%'}
+        > */
         <Image
           key={key}
           src={url}
           alt=""
           width={600}
           height={360}
-          objectFit="cover"
+          objectFit="contain"
+          //layout="fill"
         />
+        /* </Box> */
       )
     }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const customRenderItem = (item: any, props: any) => {
-    return <item.type {...item.props} {...props} />
+    return (
+      <item.type
+        {...item.props}
+        {...props}
+        display={'block'}
+        position={'relative'}
+        width={'100%'}
+        height={'100%'}
+      />
+    )
   }
 
   return (
@@ -94,7 +112,8 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
       >
         <Flex
           w={{ base: '300px', md: '360px', lg: '600px' }}
-          h={{ base: '180px', md: '240px', lg: '360px' }}
+          h={{ base: '180px', md: '240px', lg: '100%' }}
+          minH={{ base: '180px', md: '240px', lg: '320px' }}
           bgColor="brand.900"
           borderRadius="md"
           alignItems="flex-start"
@@ -112,7 +131,7 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
               showArrows={true}
               renderItem={customRenderItem}
               showStatus={false}
-              dynamicHeight={false}
+              dynamicHeight={true}
               showThumbs={false}
             >
               {props.assets.map((asset, i) => (
