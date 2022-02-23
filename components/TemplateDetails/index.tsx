@@ -113,10 +113,12 @@ export const TemplateDetails: React.FC<Templates> = (props) => {
         <Flex
           w={{ base: '300px', md: '360px', lg: '600px' }}
           h={{ base: '180px', md: '240px', lg: '100%' }}
+          minW={{ base: '300px', md: '360px', lg: '600px' }}
           minH={{ base: '180px', md: '240px', lg: '320px' }}
           bgColor="brand.900"
           borderRadius="md"
           alignItems="flex-start"
+          alignContent="center"
           justifyContent="center"
         >
           {props.assets.length == 0 ? (
