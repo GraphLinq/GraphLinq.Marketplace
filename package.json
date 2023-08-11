@@ -35,7 +35,7 @@
     "react-responsive-carousel": "^3.2.21",
     "swr": "^1.0.1",
     "ua-parser-js": "^0.7.33",
-    "web3": "^1.5.3",
+    "web3": "^1.10.0",
     "zustand": "^3.5.10"
   },
   "devDependencies": {
